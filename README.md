@@ -26,3 +26,7 @@ The build is minified and the filenames include the hashes.<br />
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+### `yarn server`
+
+You should see your API running with an endpoint, `http:/localhost:3000/employees` (`employees` - endpoint)

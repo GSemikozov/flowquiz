@@ -31,7 +31,7 @@ export const FilestackPicker = () => {
     const [uploadedFile, setUploadedFile] = useState({
         ...initUploadedFileState,
         url: currentImageUrl,
-    }); // TODO: get it by user's specific quiz from selector and display
+    });
 
     // TODO: use selectors
     // const locale = useSelector(selectCurrentUserLocale);

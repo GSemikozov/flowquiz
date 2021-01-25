@@ -8,7 +8,6 @@ import "./App.css";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { Container } from "@material-ui/core";
-import { MultipleChoiceQuestion } from "./features/multiple-choice-question/MultipleChoiceQuestion";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -39,7 +38,6 @@ function App() {
                         <Grid item xs={4}>
                             <Paper style={{ padding: "20px" }}>
                                 <h3>Question</h3>
-                                <MultipleChoiceQuestion />
                             </Paper>
                         </Grid>
                         <Grid item xs={4}>

@@ -19,7 +19,7 @@
     "strictNullChecks": true,
     "jsx": "react",
     "baseUrl": "src",
-    "outDir": "public",
+    "outDir": "build",
     //    "paths": {
     //      "@/*": ["./*"]
     //    },

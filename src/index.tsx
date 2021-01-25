@@ -13,8 +13,6 @@ initSentry({
     dsn: "https://ddb501c2d40e4a55842b80dc677ec4fa@o508217.ingest.sentry.io/5600418",
 }); // TODO: state.app.config.sentry - put dsn and env there
 
-// Sentry.init({ dsn: "https://ddb501c2d40e4a55842b80dc677ec4fa@o508217.ingest.sentry.io/5600418" });
-
 ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>

@@ -39,5 +39,13 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <script src="//static.filestackapi.com/filestack-js/3.x.x/filestack.min.js"></script>
+    <script>
+      window.filestackSecurity = false;
+
+      window.addEventListener('DOMContentLoaded', function () {
+        window.filestackClient = filestack.init("AmZSmZrsSTpCqzsAYF6lPz", { security: window.filestackSecurity });
+      });
+    </script>
   </body>
 </html>

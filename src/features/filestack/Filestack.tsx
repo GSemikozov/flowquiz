@@ -23,15 +23,17 @@ const initUploadedFileState = {
 };
 
 export const FilestackPicker = () => {
-    const [uploadedFile, setUploadedFile] = useState(initUploadedFileState); // TODO: get it by user's specific quiz from selector and display
     const [open, setOpen] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
     const dispatch = useDispatch();
 
-    const currentImageUrl = useSelector(selectCurrentImageUrl);
+    const currentImageUrl = useSelector(selectCurrentImageUrl) || "";
+    const [uploadedFile, setUploadedFile] = useState({
+        ...initUploadedFileState,
+        url: currentImageUrl,
+    }); // TODO: get it by user's specific quiz from selector and display
 
     // TODO: use selectors
-    // const imageUrl = useSelector(selectCurrentImageUrl);
     // const locale = useSelector(selectCurrentUserLocale);
     const locale = "en";
 

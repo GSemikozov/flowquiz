@@ -57,7 +57,7 @@ export const FilestackPicker = () => {
                 enqueueSnackbar("Image was successfully loaded", { variant: "success" });
             }, 1000);
         },
-        [enqueueSnackbar, updateImage],
+        [enqueueSnackbar, updateImage, dispatch],
     );
 
     const { containerSelector } = useFilepicker({

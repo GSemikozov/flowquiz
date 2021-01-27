@@ -24,6 +24,7 @@ export const quizItemUploadImageAsync = (quizItemImageUrl: quizItemImageUrlType)
 ) => {
     setTimeout(() => {
         dispatch(quizItemImageUpload(quizItemImageUrl));
+        window.localStorage.setItem("file", quizItemImageUrl); // TODO: save to DB instead of localStorage
     }, 1000);
 };
 
@@ -33,6 +34,7 @@ export const quizItemUploadImageAsync = (quizItemImageUrl: quizItemImageUrlType)
 //
 // export const selectCurrentAvatarUrl = (state: RootState) => selectCurrentUser(state).quizes;
 
-export const selectCurrentImageUrl = (state: RootState) => state.quizItemImage.quizItemImageUrl;
+export const selectCurrentImageUrl = (state: RootState) =>
+    state.quizItemImage.quizItemImageUrl || window.localStorage.getItem("file"); // TODO: get from DB instead of localStorage
 
 export default quizItemImage.reducer;

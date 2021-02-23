@@ -1,20 +1,49 @@
-import React, { useCallback, useState } from "react";
-import { Button, FormControl } from "@material-ui/core";
-import EditableTextField from "./EditableTextField";
-import DetailedAccordion from "./DetailedAccordion";
+import React from "react";
+import { quizListItemType } from "./types";
+import { makeStyles } from "@material-ui/core/styles";
+import { Card, CardContent, CardHeader, IconButton, Typography } from "@material-ui/core";
+import ImageIcon from "@material-ui/icons/Image";
+import { QuizListItemEditableTitle } from "./QuizListItemEditableTitle";
+import { QuizItemEditableOptions } from "./QuizItemEditableOptions";
 
-export const QuizItem = ({ onClick, completed }: { onClick: () => void; completed: boolean }) => {
+export type ClickType = {
+    onClick: () => { payload: any; type: string };
+};
+
+const useStyles = makeStyles((theme) => ({
+    cardContent: {
+        padding: 0,
+        "&:last-child": {
+            padding: 0,
+        },
+    },
+}));
+
+export const QuizItem = ({
+    onClick,
+    id,
+    title,
+    completed,
+    questions,
+}: ClickType & quizListItemType) => {
+    const classes = useStyles();
+
     return (
         <div style={{ marginBottom: "40px" }}>
-            <form noValidate autoComplete="off">
-                <FormControl fullWidth={true}>
-                    {/*<span onClick={onClick} style={{color: completed ? "green" : "none"}}>Check</span>*/}
-                    <EditableTextField value="Your question" />
-                    {/*<Button variant="outlined" color="primary" type="submit">Сохранить</Button>*/}
-                </FormControl>
-            </form>
             <div style={{ textAlign: "left" }}>
-                <DetailedAccordion />
+                <Card>
+                    <CardHeader
+                        action={
+                            <IconButton>
+                                <ImageIcon />
+                            </IconButton>
+                        }
+                        title={<QuizListItemEditableTitle title={title} id={id} />}
+                    />
+                    <CardContent className={classes.cardContent}>
+                        <QuizItemEditableOptions id={id} />
+                    </CardContent>
+                </Card>
             </div>
         </div>
     );

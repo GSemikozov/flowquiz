@@ -1,21 +1,21 @@
-import React from "react";
-import { withStyles } from "@material-ui/core/styles";
+import React, { useEffect, useRef, useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import Edit from "@material-ui/icons/Edit";
-import IconButton from "@material-ui/core/IconButton";
-import InputAdornment from "@material-ui/core/InputAdornment";
+import { connect, useDispatch } from "react-redux";
+import { useEditableText } from "../../hooks/useEditableText";
+import debounce from "lodash.debounce";
+import { InputBase } from "@material-ui/core";
 
-const styles = (theme: { spacing: { unit: any } }) => ({
+const useStyles = makeStyles({
     textField: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
-        width: 300,
+        minWidth: 240,
+        maxWidth: "100%",
         color: "black",
-        fontSize: 30,
         opacity: 1,
         borderBottom: 0,
+        boxSizing: "border-box",
         "&:before": {
-            borderBottom: 0,
+            borderBottom: "0 !important",
         },
     },
     disabled: {
@@ -30,70 +30,182 @@ const styles = (theme: { spacing: { unit: any } }) => ({
     },
 });
 
-class EditableTextField extends React.Component {
-    state = {
-        email: "johndoe@domain.com",
-        editMode: false,
-        mouseOver: false,
+const initFieldState = {
+    text: "johndoe@domain.com",
+    editMode: false,
+};
+
+export default function EditableTextField({
+    value,
+    name,
+    fullWidth = false,
+}: {
+    value: any;
+    name: any;
+    fullWidth?: boolean;
+}) {
+    // const [fieldState, setFieldState] = useState(initFieldState);
+    const [dbValue, saveToDb] = useState(""); // would be an API call normally
+    const dispatch = useDispatch();
+    const { handleChange, handleMouseOver, handleMouseOut, text, editMode } = useEditableText(
+        value,
+    );
+    const classes = useStyles();
+
+    useEffect(() => {
+        console.log("dbValue", dbValue);
+        // dispatch(updateTitleAction(dbValue))
+    }, [dispatch, dbValue]);
+
+    useEffect(() => {
+        console.log("text was changed", text);
+    }, [text]);
+
+    useEffect(() => {
+        console.log("editMode inside", editMode);
+    }, [editMode]);
+
+    const debouncedSave = useRef(
+        debounce((nextValue: string) => {
+            saveToDb(nextValue);
+        }, 500),
+    ).current;
+
+    const handleOnChange = (event: any) => {
+        const { value: nextValue } = event.target;
+        handleChange(event);
+        debouncedSave(nextValue);
+        // updateTitle();
     };
 
-    handleChange = (event: { target: { name: any; value: any } }) => {
-        this.setState({ [event.target.name]: event.target.value });
-    };
-
-    handleMouseOver = () => {
-        if (!this.state.mouseOver) {
-            this.setState({ mouseOver: true });
-        }
-    };
-
-    handleMouseOut = () => {
-        // The problem is here!!!
-        if (this.state.mouseOver) {
-            this.setState({ mouseOver: false });
-        }
-    };
-
-    handleClick = () => {
-        this.setState({
-            editMode: true,
-            mouseOver: false,
-        });
-    };
-
-    render() {
-        // @ts-ignore
-        const { classes, value } = this.props;
-
-        return (
-            <TextField
-                name="email"
-                defaultValue={value}
-                margin="normal"
-                error={this.state.email === ""}
-                onChange={this.handleChange}
-                disabled={!this.state.editMode}
-                className={classes.textField}
-                onMouseEnter={this.handleMouseOver}
-                onMouseLeave={this.handleMouseOut}
-                InputProps={{
-                    classes: {
-                        disabled: classes.disabled,
-                    },
-                    endAdornment: this.state.mouseOver ? (
-                        <InputAdornment position="end">
-                            <IconButton onClick={this.handleClick}>
-                                <Edit />
-                            </IconButton>
-                        </InputAdornment>
-                    ) : (
-                        ""
-                    ),
-                }}
-            />
-        );
-    }
+    return (
+        <InputBase
+            autoFocus
+            name={name}
+            defaultValue={value}
+            // error={text === ""}
+            onChange={(e) => {
+                handleOnChange(e);
+            }}
+            disabled={!editMode}
+            className={classes.textField}
+            onMouseEnter={() => handleMouseOver()}
+            onMouseLeave={() => handleMouseOut()}
+            // onBlur={() => handleOnBlur()}
+            // onFocus={e => {
+            //     e.stopPropagation();
+            //     handleOnFocus();
+            // }}
+            fullWidth={fullWidth}
+            // InputProps={{
+            //     classes: {
+            //         disabled: classes.disabled,
+            //     },
+            // }}
+        />
+    );
 }
 
-// @ts-ignore
-export default withStyles(styles)(EditableTextField);
+// class EditableTextField extends React.Component {
+//     state = {
+//         text: "johndoe@domain.com",
+//         editMode: false,
+//         mouseOver: false,
+//     };
+//
+//     handleChange = (event: { target: { name: any; value: any } }) => {
+//         this.setState({ [event.target.name]: event.target.value });
+//
+//     };
+//
+//     handleMouseOver = () => {
+//         if (!this.state.mouseOver) {
+//             this.setState({
+//                 mouseOver: true,
+//                 editMode: true,
+//             });
+//         }
+//     };
+//
+//     handleMouseOut = () => {
+//         if (this.state.mouseOver) {
+//             this.setState({
+//                 mouseOver: false,
+//                 editMode: false,
+//             });
+//         }
+//     };
+//
+//     handleOnClick = () => {
+//         this.setState({
+//             editMode: true,
+//         });
+//     };
+//
+//     handleOnBlur = () => {
+//         this.setState({
+//             editMode: false,
+//         });
+//     };
+//
+//     handleOnFocus = () => {
+//         this.setState({
+//             editMode: true,
+//         });
+//     };
+//
+//     render() {
+//         // @ts-ignore
+//         const { classes, value, name, label, fullWidth, updateTitle } = this.props;
+//
+//         return (
+//             <TextField
+//                 autoFocus={true}
+//                 autoComplete="off"
+//                 name={name}
+//                 label={label}
+//                 defaultValue={value}
+//                 error={this.state.text === ""}
+//                 onChange={(e) => {
+//                     this.handleChange(e);
+//                     updateTitle();
+//                 }}
+//                 disabled={!this.state.editMode}
+//                 className={classes.textField}
+//                 onMouseEnter={this.handleMouseOver}
+//                 onMouseLeave={this.handleMouseOut}
+//                 onBlur={this.handleOnBlur}
+//                 onFocus={e => {
+//                     e.stopPropagation();
+//                     this.handleOnFocus();
+//                 }}
+//                 onClick={e => {
+//                     e.stopPropagation()
+//                 }}
+//                 fullWidth={fullWidth}
+//                 InputProps={{
+//                     classes: {
+//                         disabled: classes.disabled,
+//                     },
+//                 }}
+//             />
+//         );
+//     }
+// }
+//
+// const mapDispatchToProps = (dispatch: (arg0: any) => void) => ({
+//     updateTitle: () => {
+//         dispatch({ type: "UPDATE_EDITABLE_TEXT" });
+//     },
+// });
+//
+// // @ts-ignore
+// export default compose(
+//     // @ts-ignore
+//     withStyles(styles),
+//     connect(
+//         null,
+//         mapDispatchToProps, // or put null here if you do not have actions to dispatch
+//     ),
+//     // @ts-ignore
+// )(EditableTextField);

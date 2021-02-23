@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function ErrorRadios() {
+export const QuizRadios = () => {
     const classes = useStyles();
     const [value, setValue] = React.useState("");
     const [error, setError] = React.useState(false);
@@ -64,4 +64,4 @@ export default function ErrorRadios() {
             </FormControl>
         </form>
     );
-}
+};

@@ -29,9 +29,9 @@ export const QuizItemList = () => {
                         />
                     ))}
             </div>
-            <Fab color="primary" aria-label="add" onClick={addMoreItem}>
-                <AddIcon />
-            </Fab>
+            {/*<Fab color="primary" aria-label="add" onClick={addMoreItem}>*/}
+            {/*    <AddIcon />*/}
+            {/*</Fab>*/}
         </>
     );
 };

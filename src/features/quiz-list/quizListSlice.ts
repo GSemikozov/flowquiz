@@ -188,9 +188,9 @@ const quizListSlice = createSlice({
             item &&
                 item.questions.map((question) => {
                     if (question.id === questionId) {
-                        question.isTrue = !question.isTrue;
+                        return (question.isTrue = !question.isTrue);
                     } else {
-                        question.isTrue = false;
+                        return (question.isTrue = false);
                     }
                 });
         },

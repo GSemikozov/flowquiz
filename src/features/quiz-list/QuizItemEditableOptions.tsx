@@ -36,7 +36,7 @@ export const QuizItemEditableOptions = ({ id }: { id: number }) => {
         };
 
         dispatch(addQuestionsListOption(newOptionData));
-    }, [dispatch]);
+    }, [dispatch, id]);
 
     const handleChange = (event: any) => {
         event.preventDefault();

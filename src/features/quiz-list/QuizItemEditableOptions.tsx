@@ -1,17 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import RadioGroup from "@material-ui/core/RadioGroup";
-import { FormControl, Grid, TextField, Typography } from "@material-ui/core";
+import { Grid, TextField } from "@material-ui/core";
 import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
 import { useDispatch, useSelector, useStore } from "react-redux";
-import {
-    addQuestionsListOption,
-    getCurrentListItemOptionsSelector,
-    updateQuestionsListOptionTitle,
-} from "./quizListSlice";
+import { addQuestionsListOption, getCurrentListItemOptionsSelector } from "./quizListSlice";
 import { QuizItemEditableOption } from "./QuizItemEditableOption";
 import { questionsItem } from "./types";
-import { QuizListItemEditableTitle } from "./QuizListItemEditableTitle";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -32,16 +27,16 @@ export const QuizItemEditableOptions = ({ id }: { id: number }) => {
     useEffect(() => {
         console.log("listItemData", id, listItemData);
         console.log("store.getState()", store.getState());
-    }, []);
-
-    const newOptionData = {
-        quizListItemId: id,
-        quizListItemOption: { id: Date.now(), title: "Option", answer: "", isTrue: false },
-    };
+    }, [id, listItemData, store]);
 
     const addMoreItem = useCallback(() => {
+        const newOptionData = {
+            quizListItemId: id,
+            quizListItemOption: { id: Date.now(), title: "Option", answer: "", isTrue: false },
+        };
+
         dispatch(addQuestionsListOption(newOptionData));
-    }, [dispatch, newOptionData]);
+    }, [dispatch]);
 
     const handleChange = (event: any) => {
         event.preventDefault();

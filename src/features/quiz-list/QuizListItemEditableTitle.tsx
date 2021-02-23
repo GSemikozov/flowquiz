@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useRef } from "react";
 import { useEditableText } from "../../hooks/useEditableText";
 import debounce from "lodash.debounce";
 import { InputBase } from "@material-ui/core";
@@ -29,7 +29,7 @@ export const QuizListItemEditableTitle = ({
 }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const { handleChange, toggleEditMode, text, editMode } = useEditableText(title);
+    const { handleChange, toggleEditMode } = useEditableText(title);
 
     const updateItemTitle = useCallback(
         (title: string) => {

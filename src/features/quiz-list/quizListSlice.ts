@@ -1,8 +1,6 @@
 import { createSelector, createSlice } from "@reduxjs/toolkit";
 import { AppThunk, RootState } from "../../app/store";
 import { quizListType } from "./types";
-import { useSelector } from "react-redux";
-import { v4 as uuid } from "uuid";
 
 const initialState = {
     quizList: [

@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import MobileStepper from "@material-ui/core/MobileStepper";
 import Paper from "@material-ui/core/Paper";
@@ -37,28 +37,28 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const QuestionItem = (question: any) => {
-    const classes = useStyles();
-
-    return (
-        <Grid container alignItems="center">
-            <Grid item key={question.id}>
-                <FormControlLabel
-                    key={question.id}
-                    value={`${question.title}${question.id}`}
-                    control={<Radio />}
-                    label=""
-                    onBlur={(e) => e.preventDefault()}
-                    className={classes.label}
-                    checked={question.isTrue}
-                />
-            </Grid>
-            <Grid item style={{ flexGrow: 1 }}>
-                <Typography align="left">{question.title}</Typography>
-            </Grid>
-        </Grid>
-    );
-};
+// const QuestionItem = (question: any) => {
+//     const classes = useStyles();
+//
+//     return (
+//         <Grid container alignItems="center">
+//             <Grid item key={question.id}>
+//                 <FormControlLabel
+//                     key={question.id}
+//                     value={`${question.title}${question.id}`}
+//                     control={<Radio />}
+//                     label=""
+//                     onBlur={(e) => e.preventDefault()}
+//                     className={classes.label}
+//                     checked={question.isTrue}
+//                 />
+//             </Grid>
+//             <Grid item style={{ flexGrow: 1 }}>
+//                 <Typography align="left">{question.title}</Typography>
+//             </Grid>
+//         </Grid>
+//     );
+// };
 
 export default function PreviewStepper({ data }: any) {
     const classes = useStyles();

@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import React, { Dispatch, SetStateAction, useRef } from "react";
 import { useEditableText } from "../../hooks/useEditableText";
 import debounce from "lodash.debounce";
 import { InputBase } from "@material-ui/core";
@@ -28,7 +28,7 @@ export const QuizItemEditableInput = ({
     saveToDb: Dispatch<SetStateAction<string>>;
 }) => {
     const classes = useStyles();
-    const { handleChange, toggleEditMode, text, editMode } = useEditableText(title);
+    const { handleChange, toggleEditMode, editMode } = useEditableText(title);
 
     const debouncedSave = useRef(
         debounce((nextValue: string) => {

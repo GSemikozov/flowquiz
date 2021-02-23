@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Navbar } from "./components/Navbar/Navbar";
 import { FilestackPicker } from "./features/filestack/Filestack";
 import Paper from "@material-ui/core/Paper";
@@ -7,13 +7,10 @@ import Grid from "@material-ui/core/Grid";
 import "./App.css";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { Container, Typography } from "@material-ui/core";
+import { Container } from "@material-ui/core";
 import { QuizItemList } from "./features/quiz-list/QuizItemsList";
 import { useDispatch, useSelector } from "react-redux";
 import { getListSelector } from "./features/quiz-list/quizListSlice";
-import { quizListItemType } from "./features/quiz-list/types";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Radio from "@material-ui/core/Radio";
 import TextMobileStepper from "./PreviewStepper";
 
 const useStyles = makeStyles((theme) => ({

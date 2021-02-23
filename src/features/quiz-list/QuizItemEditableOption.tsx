@@ -2,14 +2,13 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
     removeQuestionsListOption,
     updateQuestionsOptionAnswer,
-    updateQuizListItemTitle,
     updateQuestionsListOptionTitle,
     toggleQuestionsListOptionChecked,
 } from "./quizListSlice";
-import { Grid, IconButton, InputBase, TextareaAutosize } from "@material-ui/core";
+import { Grid, IconButton, TextareaAutosize } from "@material-ui/core";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
-import { Check, Close } from "@material-ui/icons";
+import { Close } from "@material-ui/icons";
 import { useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import { QuizItemEditableInput } from "./QuizItemEditableInput";
@@ -86,7 +85,7 @@ export const QuizItemEditableOption = ({
                 }),
             );
         },
-        [dispatch, quizListId],
+        [dispatch, quizListId, questionId],
     );
 
     const updateItemAnswer = useCallback(
@@ -100,7 +99,7 @@ export const QuizItemEditableOption = ({
                 }),
             );
         },
-        [dispatch, quizListId],
+        [dispatch, quizListId, answer],
     );
 
     const removeItem = useCallback(() => {
@@ -122,7 +121,7 @@ export const QuizItemEditableOption = ({
         } else {
             updateItemTitle({ title: dbValue });
         }
-    }, [dispatch, dbValue]);
+    }, [dispatch, dbValue, updateItemTitle]);
 
     return (
         <>

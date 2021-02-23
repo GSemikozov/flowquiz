@@ -1,18 +1,16 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Fab } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
-import { addNewQuizListItem, toggleQuizListItem, getListSelector } from "./quizListSlice";
-import { ClickType, QuizItem } from "./QuizItem";
+import { toggleQuizListItem, getListSelector } from "./quizListSlice";
+import { QuizItem } from "./QuizItem";
 import { quizListItemType } from "./types";
 
 export const QuizItemList = () => {
     const dispatch = useDispatch();
     const listData = useSelector(getListSelector);
 
-    const addMoreItem = useCallback(() => {
-        dispatch(addNewQuizListItem);
-    }, [dispatch]);
+    // const addMoreItem = useCallback(() => {
+    //     dispatch(addNewQuizListItem);
+    // }, [dispatch]);
 
     return (
         <>

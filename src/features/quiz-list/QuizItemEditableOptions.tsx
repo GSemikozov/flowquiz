@@ -1,7 +1,19 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import RadioGroup from "@material-ui/core/RadioGroup";
-import { Grid, TextField } from "@material-ui/core";
+import {
+    Grid,
+    IconButton,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemSecondaryAction,
+    ListItemText,
+    TextField,
+} from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { addQuestionsListOption, getCurrentListItemOptionsSelector } from "./quizListSlice";
@@ -14,6 +26,10 @@ const useStyles = makeStyles((theme) => ({
     },
     button: {
         margin: theme.spacing(1, 1, 0, 0),
+    },
+    list: {
+        counterReset: "alphabeticList",
+        listStyleType: "none",
     },
 }));
 
@@ -53,8 +69,13 @@ export const QuizItemEditableOptions = ({ id }: { id: number }) => {
 
     const DefaultItem = () => {
         return (
-            <Grid container spacing={1} style={{ marginBottom: "20px" }} alignItems="center">
-                <Grid item style={{ paddingLeft: "12px" }}>
+            <Grid
+                container
+                spacing={1}
+                style={{ marginBottom: "20px", marginTop: "8px" }}
+                alignItems="center"
+            >
+                <Grid item style={{ paddingLeft: "20px", paddingRight: "12px" }}>
                     <RadioButtonUncheckedIcon color="disabled" />
                 </Grid>
                 <Grid item>
@@ -69,25 +90,19 @@ export const QuizItemEditableOptions = ({ id }: { id: number }) => {
     };
 
     return (
-        <RadioGroup
-            aria-label={listItemData.title}
-            name={`question-group-${id}`}
-            value={value}
-            onChange={handleChange}
-        >
-            <div style={{ width: "100%", padding: "0 12px", boxSizing: "border-box" }}>
-                {listItemData.questions.length > 0 &&
-                    listItemData.questions.map((item: questionsItem) => (
-                        <QuizItemEditableOption
-                            key={item.id}
-                            quizListId={id}
-                            questionId={item.id}
-                            name={item.title}
-                            initialTitle={item.title}
-                        />
-                    ))}
-                <DefaultItem />
-            </div>
-        </RadioGroup>
+        <List className={classes.list}>
+            {listItemData &&
+                listItemData.questions.length > 0 &&
+                listItemData?.questions.map((item: questionsItem) => (
+                    <QuizItemEditableOption
+                        key={item.id}
+                        quizListId={id}
+                        questionId={item.id}
+                        name={item.title}
+                        initialTitle={item.title}
+                    />
+                ))}
+            <DefaultItem />
+        </List>
     );
 };

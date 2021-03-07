@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 function App() {
     const classes = useStyles();
+    const [open, setOpen] = useState(false);
 
     // const handleChange = (event: any) => {
     //   setState({ ...state, [event.target.name]: event.target.checked });
@@ -50,22 +51,16 @@ function App() {
             <main className={classes.root}>
                 <Container maxWidth="xl">
                     <Grid container spacing={3}>
-                        <Grid item xs={4}>
-                            <Paper style={{ padding: "20px" }}>
-                                <h3>Edit options</h3>
-                                <FilestackPicker />
-                            </Paper>
+                        <Grid item xs={1}>
+                            {/*<Paper style={{ padding: "20px" }}>*/}
+                            {/*    <h3>Settings</h3>*/}
+                            {/*    <FilestackPicker open={open} toggle={() => setOpen(prev => !prev)} />*/}
+                            {/*</Paper>*/}
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={11}>
                             <Paper style={{ padding: "20px" }}>
                                 <h3>Question</h3>
                                 <QuizItemList />
-                            </Paper>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <Paper style={{ padding: "20px" }}>
-                                <h3>Answer</h3>
-                                <Preview />
                             </Paper>
                         </Grid>
                     </Grid>

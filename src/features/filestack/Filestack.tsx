@@ -22,15 +22,15 @@ const initUploadedFileState = {
     url: "",
 };
 
-export const FilestackPicker = () => {
-    const [open, setOpen] = useState(false);
+export const FilestackPicker = ({ open, toggle }: { open: boolean; toggle: () => void }) => {
+    // const [open, setOpen] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
     const dispatch = useDispatch();
 
     const currentImageUrl = useSelector(selectCurrentImageUrl) || "";
     const [uploadedFile, setUploadedFile] = useState({
         ...initUploadedFileState,
-        url: currentImageUrl,
+        url: "", // tempo hide, TODO: multiple load
     });
 
     // TODO: use selectors
@@ -38,11 +38,11 @@ export const FilestackPicker = () => {
     const locale = "en";
 
     const handleOpen = () => {
-        setOpen(true);
+        toggle();
     };
 
     const handleClose = () => {
-        setOpen(false);
+        toggle();
     };
 
     const updateImage = useCallback((file) => {
@@ -82,15 +82,15 @@ export const FilestackPicker = () => {
 
     return (
         <div>
-            <Button variant="outlined" color="primary" onClick={handleOpen}>
-                Upload image
-            </Button>
+            {/*<Button variant="outlined" color="primary" onClick={handleOpen}>*/}
+            {/*    Upload image*/}
+            {/*</Button>*/}
             <div>
                 {uploadedFile && (
                     <img
                         src={uploadedFile.url}
                         alt={uploadedFile.filename}
-                        style={{ maxWidth: "100%", marginTop: "20px" }}
+                        style={{ maxWidth: "400px", marginTop: "20px" }}
                     />
                 )}
             </div>

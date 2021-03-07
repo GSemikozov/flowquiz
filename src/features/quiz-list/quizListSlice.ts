@@ -229,10 +229,18 @@ export const getCurrentListItemSelector = (state: RootState, id: number) =>
     createSelector(getListSelector, (list) => list.find((item) => item.id === id));
 
 export const getCurrentListItemOptionsSelector = (state: RootState, quizQuestionId: number) =>
-    createSelector(
-        getListSelector,
-        (list) => list.filter((item) => item.id === quizQuestionId && item)[0],
-    );
+    createSelector(getListSelector, (list) => list.find((item) => item.id === quizQuestionId));
+
+export const getCurrentListItemOptionsStatusSelector = (
+    state: RootState,
+    quizListItemId: number,
+    quizQuestionId: number,
+) =>
+    createSelector(getListSelector, (list) => {
+        const item = list.find((item) => item.id === quizListItemId);
+        const question = item?.questions.find((question) => question.id === quizQuestionId);
+        return question && question.isTrue;
+    });
 
 export const getCurrentListItemIdSelector = (state: RootState, quizQuestionId: number) =>
     createSelector(getListSelector, (list) => {

@@ -4,14 +4,31 @@ import {
     updateQuestionsOptionAnswer,
     updateQuestionsListOptionTitle,
     toggleQuestionsListOptionChecked,
+    getCurrentListItemOptionsSelector,
+    getCurrentListItemOptionsStatusSelector,
 } from "./quizListSlice";
-import { Grid, IconButton, TextareaAutosize } from "@material-ui/core";
+import {
+    Collapse,
+    Grid,
+    IconButton,
+    ListItem,
+    ListItemIcon,
+    ListItemSecondaryAction,
+    ListItemText,
+    TextareaAutosize,
+    Tooltip,
+} from "@material-ui/core";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
-import { Close } from "@material-ui/icons";
-import { useDispatch } from "react-redux";
+import { CheckBox, Close, ExpandLess, ExpandMore } from "@material-ui/icons";
+import { useDispatch, useSelector, useStore } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import { QuizItemEditableInput } from "./QuizItemEditableInput";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
+import QuestionAnswerIcon from "@material-ui/icons/QuestionAnswer";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 
 const useStyles = makeStyles((theme) => ({
     label: {
@@ -38,6 +55,20 @@ const useStyles = makeStyles((theme) => ({
     btnIcons: {
         marginLeft: 10,
     },
+    listItem: {
+        counterIncrement: "alphabeticList",
+    },
+    listItemIcon: {
+        minWidth: 40,
+        position: "relative",
+        "&:before": {
+            content: "counter(alphabeticList, upper-alpha)",
+            speak: "counter(alphabeticList, upper-alpha)",
+            position: "absolute",
+            top: 2,
+            left: 7,
+        },
+    },
 }));
 
 export const QuizItemEditableOption = ({
@@ -51,11 +82,20 @@ export const QuizItemEditableOption = ({
     quizListId: number;
     questionId: number;
 }) => {
+    const store = useStore();
+    const isTrue = useSelector(
+        getCurrentListItemOptionsStatusSelector(store.getState(), quizListId, questionId),
+    );
+    const currentItemOptions = useSelector(
+        getCurrentListItemOptionsSelector(store.getState(), questionId),
+    );
+
     const dispatch = useDispatch();
     const classes = useStyles();
     const [dbValue, saveToDb] = useState(""); // would be an API call normally
     const [answer, setAnswer] = useState("");
     const [title, setTitle] = useState(initialTitle);
+    const [isOpened, setIsOpened] = useState(true);
 
     const handleAnswerChange = (e: any) => {
         setAnswer(e.target.value);
@@ -123,53 +163,69 @@ export const QuizItemEditableOption = ({
         }
     }, [dispatch, dbValue, updateItemTitle]);
 
+    useEffect(() => {
+        console.log("currentItemOptions", currentItemOptions);
+        const atLeastOneTrue =
+            currentItemOptions?.questions.some((option) => option.isTrue) || false;
+        setIsOpened(atLeastOneTrue);
+        console.log("atLeastOneTrue", atLeastOneTrue);
+    }, [currentItemOptions]);
+
     return (
         <>
-            <Grid container alignItems="center">
-                <Grid item>
-                    <FormControlLabel
-                        key={questionId}
-                        value={`${questionId}`}
-                        control={<Radio />}
-                        label=""
-                        onBlur={(e) => e.preventDefault()}
-                        onChange={() => updateItemChecked(questionId)}
-                        className={classes.label}
-                    />
-                </Grid>
-                <Grid item style={{ flexGrow: 1 }}>
+            <ListItem
+                key={questionId}
+                button
+                onClick={() => console.log("clicked")}
+                className={classes.listItem}
+            >
+                <ListItemIcon className={classes.listItemIcon}>
+                    <CheckBoxOutlineBlankIcon />
+                </ListItemIcon>
+                <ListItemText>
                     <QuizItemEditableInput name={name} title={title} saveToDb={saveToDb} />
+                </ListItemText>
+                <ListItemSecondaryAction>
+                    <Tooltip title="Set answers" aria-label="Set answers">
+                        <IconButton onClick={() => setIsOpened((prev) => !prev)} title="set answer">
+                            <QuestionAnswerIcon color={isOpened ? "primary" : "inherit"} />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Remove" aria-label="Remove">
+                        <IconButton edge="end" aria-label="delete" onClick={removeItem}>
+                            <DeleteIcon />
+                        </IconButton>
+                    </Tooltip>
+                </ListItemSecondaryAction>
+            </ListItem>
+            <Collapse in={isOpened} timeout="auto">
+                <Grid container spacing={1}>
+                    <Grid
+                        item
+                        style={{ flexGrow: 1, margin: "0 16px 0 32px", boxSizing: "border-box" }}
+                    >
+                        <TextareaAutosize
+                            style={{
+                                width: "100%",
+                                padding: "10px",
+                                boxSizing: "border-box",
+                                border: "none",
+                                borderLeft: `${isTrue ? "2px solid green" : "2px solid gray"}`,
+                                outline: "none",
+                                resize: "none",
+                            }}
+                            aria-label="minimum height"
+                            rowsMin={1}
+                            placeholder={`Place your comment here`}
+                            value={answer}
+                            onChange={(e) => handleAnswerChange(e)}
+                            onBlur={() =>
+                                updateItemAnswer({ answer: "hello", questionId: questionId })
+                            }
+                        />
+                    </Grid>
                 </Grid>
-                <Grid item>
-                    <IconButton onClick={removeItem}>
-                        <Close />
-                    </IconButton>
-                </Grid>
-            </Grid>
-            <Grid container spacing={1}>
-                <Grid
-                    item
-                    style={{ flexGrow: 1, margin: "0 16px 0 32px", boxSizing: "border-box" }}
-                >
-                    <TextareaAutosize
-                        style={{
-                            width: "100%",
-                            padding: "10px",
-                            boxSizing: "border-box",
-                            border: "none",
-                            borderLeft: "2px solid gray",
-                            outline: "none",
-                            resize: "none",
-                        }}
-                        aria-label="minimum height"
-                        rowsMin={1}
-                        placeholder={`Place your comment here`}
-                        value={answer}
-                        onChange={(e) => handleAnswerChange(e)}
-                        onBlur={() => updateItemAnswer({ answer: "hello", questionId: questionId })}
-                    />
-                </Grid>
-            </Grid>
+            </Collapse>
         </>
     );
 };

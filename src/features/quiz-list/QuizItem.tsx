@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { quizListItemType } from "./types";
 import { makeStyles } from "@material-ui/core/styles";
 import { Card, CardContent, CardHeader, IconButton } from "@material-ui/core";
 import ImageIcon from "@material-ui/icons/Image";
 import { QuizListItemEditableTitle } from "./QuizListItemEditableTitle";
 import { QuizItemEditableOptions } from "./QuizItemEditableOptions";
+import { FilestackPicker } from "../filestack/Filestack";
 
 export type ClickType = {
     onClick: () => { payload: any; type: string };
@@ -27,6 +28,7 @@ export const QuizItem = ({
     questions,
 }: ClickType & quizListItemType) => {
     const classes = useStyles();
+    const [open, setOpen] = useState(false); // filepicker
 
     return (
         <div style={{ marginBottom: "40px" }}>
@@ -34,13 +36,14 @@ export const QuizItem = ({
                 <Card>
                     <CardHeader
                         action={
-                            <IconButton>
+                            <IconButton onClick={() => setOpen((prev) => !prev)}>
                                 <ImageIcon />
                             </IconButton>
                         }
                         title={<QuizListItemEditableTitle title={title} id={id} />}
                     />
                     <CardContent className={classes.cardContent}>
+                        <FilestackPicker open={open} toggle={() => setOpen((prev) => !prev)} />
                         <QuizItemEditableOptions id={id} />
                     </CardContent>
                 </Card>

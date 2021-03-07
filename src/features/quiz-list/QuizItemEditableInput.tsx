@@ -55,7 +55,7 @@ export const QuizItemEditableInput = ({
             onChange={(e) => {
                 handleOnChange(e);
             }}
-            disabled={!editMode}
+            // disabled={!editMode}
             className={classes.textField}
             // onMouseEnter={() => handleMouseOver()}
             onMouseLeave={() => toggleEditMode()}

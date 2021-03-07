@@ -38,7 +38,7 @@ export const QuizItemEditableOptions = ({ id }: { id: number }) => {
     const dispatch = useDispatch();
     const store = useStore();
     const listItemData = useSelector(getCurrentListItemOptionsSelector(store.getState(), id));
-    const [value, setValue] = useState("Option");
+    const [value] = useState("Option");
 
     useEffect(() => {
         console.log("listItemData", id, listItemData);

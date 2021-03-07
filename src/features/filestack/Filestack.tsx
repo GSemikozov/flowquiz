@@ -41,9 +41,9 @@ export const FilestackPicker = ({ open, toggle }: { open: boolean; toggle: () =>
     //     toggle();
     // };
 
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         toggle();
-    };
+    }, [toggle]);
 
     const updateImage = useCallback((file) => {
         setUploadedFile(file);

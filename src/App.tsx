@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Navbar } from "./components/Navbar/Navbar";
 // import { FilestackPicker } from "./features/filestack/Filestack";
 import Paper from "@material-ui/core/Paper";
@@ -9,9 +9,9 @@ import "./App.css";
 import { makeStyles } from "@material-ui/core/styles";
 import { Container } from "@material-ui/core";
 import { QuizItemList } from "./features/quiz-list/QuizItemsList";
-import { useDispatch, useSelector } from "react-redux";
-import { getListSelector } from "./features/quiz-list/quizListSlice";
-import TextMobileStepper from "./PreviewStepper";
+// import { useDispatch, useSelector } from "react-redux";
+// import { getListSelector } from "./features/quiz-list/quizListSlice";
+// import TextMobileStepper from "./PreviewStepper";
 
 const useStyles = makeStyles((theme) => ({
     label: {

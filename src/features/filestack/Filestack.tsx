@@ -37,9 +37,9 @@ export const FilestackPicker = ({ open, toggle }: { open: boolean; toggle: () =>
     // const locale = useSelector(selectCurrentUserLocale);
     const locale = "en";
 
-    const handleOpen = () => {
-        toggle();
-    };
+    // const handleOpen = () => {
+    //     toggle();
+    // };
 
     const handleClose = () => {
         toggle();
@@ -59,7 +59,7 @@ export const FilestackPicker = ({ open, toggle }: { open: boolean; toggle: () =>
                 enqueueSnackbar("Image was successfully loaded", { variant: "success" });
             }, 1000);
         },
-        [enqueueSnackbar, updateImage, dispatch],
+        [enqueueSnackbar, updateImage, handleClose, dispatch],
     );
 
     const { containerSelector } = useFilepicker({

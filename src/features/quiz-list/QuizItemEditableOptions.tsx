@@ -59,9 +59,9 @@ export const QuizItemEditableOptions = ({ id }: { id: number }) => {
     //     setInputValue(event.target.value);
     // };
 
-    const setInputValue = (value: string) => {
-        setValue(value);
-    };
+    // const setInputValue = (value: string) => {
+    //     setValue(value);
+    // };
 
     useEffect(() => {
         console.log("radio value changed", value);

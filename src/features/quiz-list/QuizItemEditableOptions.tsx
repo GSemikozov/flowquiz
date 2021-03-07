@@ -1,19 +1,19 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import RadioGroup from "@material-ui/core/RadioGroup";
+// import RadioGroup from "@material-ui/core/RadioGroup";
 import {
     Grid,
-    IconButton,
+    // IconButton,
     List,
-    ListItem,
-    ListItemIcon,
-    ListItemSecondaryAction,
-    ListItemText,
+    // ListItem,
+    // ListItemIcon,
+    // ListItemSecondaryAction,
+    // ListItemText,
     TextField,
 } from "@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+// import DeleteIcon from "@material-ui/icons/Delete";
+// import EditIcon from "@material-ui/icons/Edit";
+// import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { addQuestionsListOption, getCurrentListItemOptionsSelector } from "./quizListSlice";
@@ -54,10 +54,10 @@ export const QuizItemEditableOptions = ({ id }: { id: number }) => {
         dispatch(addQuestionsListOption(newOptionData));
     }, [dispatch, id]);
 
-    const handleChange = (event: any) => {
-        event.preventDefault();
-        setInputValue(event.target.value);
-    };
+    // const handleChange = (event: any) => {
+    //     event.preventDefault();
+    //     setInputValue(event.target.value);
+    // };
 
     const setInputValue = (value: string) => {
         setValue(value);

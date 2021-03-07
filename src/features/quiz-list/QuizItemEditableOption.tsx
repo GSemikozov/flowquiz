@@ -3,7 +3,7 @@ import {
     removeQuestionsListOption,
     updateQuestionsOptionAnswer,
     updateQuestionsListOptionTitle,
-    toggleQuestionsListOptionChecked,
+    // toggleQuestionsListOptionChecked,
     getCurrentListItemOptionsSelector,
     getCurrentListItemOptionsStatusSelector,
 } from "./quizListSlice";
@@ -18,14 +18,14 @@ import {
     TextareaAutosize,
     Tooltip,
 } from "@material-ui/core";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Radio from "@material-ui/core/Radio";
-import { CheckBox, Close, ExpandLess, ExpandMore } from "@material-ui/icons";
+// import FormControlLabel from "@material-ui/core/FormControlLabel";
+// import Radio from "@material-ui/core/Radio";
+// import { CheckBox, Close, ExpandLess, ExpandMore } from "@material-ui/icons";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import { QuizItemEditableInput } from "./QuizItemEditableInput";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import EditIcon from "@material-ui/icons/Edit";
+// import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+// import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import QuestionAnswerIcon from "@material-ui/icons/QuestionAnswer";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
@@ -101,17 +101,17 @@ export const QuizItemEditableOption = ({
         setAnswer(e.target.value);
     };
 
-    const updateItemChecked = useCallback(
-        (questionId) => {
-            dispatch(
-                toggleQuestionsListOptionChecked({
-                    questionId: questionId,
-                    quizListItemId: quizListId,
-                }),
-            );
-        },
-        [dispatch, quizListId],
-    );
+    // const updateItemChecked = useCallback(
+    //     (questionId) => {
+    //         dispatch(
+    //             toggleQuestionsListOptionChecked({
+    //                 questionId: questionId,
+    //                 quizListItemId: quizListId,
+    //             }),
+    //         );
+    //     },
+    //     [dispatch, quizListId],
+    // );
 
     const updateItemTitle = useCallback(
         ({ title }: { title: string }) => {

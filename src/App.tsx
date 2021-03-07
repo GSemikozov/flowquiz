@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Navbar } from "./components/Navbar/Navbar";
-import { FilestackPicker } from "./features/filestack/Filestack";
+// import { FilestackPicker } from "./features/filestack/Filestack";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 
@@ -26,24 +26,24 @@ const useStyles = makeStyles((theme) => ({
 
 function App() {
     const classes = useStyles();
-    const [open, setOpen] = useState(false);
+    // const [open, setOpen] = useState(false);
 
     // const handleChange = (event: any) => {
     //   setState({ ...state, [event.target.name]: event.target.checked });
     // };
 
-    const Preview = () => {
-        const listData = useSelector(getListSelector);
-        const dispatch = useDispatch();
-        const [data, setData] = useState(listData);
-
-        useEffect(() => {
-            console.log("listData", listData);
-            setData(listData);
-        }, [dispatch, listData]);
-
-        return <TextMobileStepper data={data} />;
-    };
+    // const Preview = () => {
+    //     const listData = useSelector(getListSelector);
+    //     const dispatch = useDispatch();
+    //     const [data, setData] = useState(listData);
+    //
+    //     useEffect(() => {
+    //         console.log("listData", listData);
+    //         setData(listData);
+    //     }, [dispatch, listData]);
+    //
+    //     return <TextMobileStepper data={data} />;
+    // };
 
     return (
         <div className="App">

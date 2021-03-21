@@ -1,13 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { PickerFileMeta, useFilepicker } from "./useFilestack";
 import { useSnackbar } from "notistack";
-import Button from "@material-ui/core/Button";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Dialog from "@material-ui/core/Dialog";
-import { quizItemUploadImageAsync, selectCurrentImageUrl } from "./filestackSlice";
+import { quizItemUploadImageAsync } from "./filestackSlice";
 
 const initUploadedFileState = {
     filename: "",
@@ -22,28 +21,38 @@ const initUploadedFileState = {
     url: "",
 };
 
-export const FilestackPicker = () => {
-    const [open, setOpen] = useState(false);
+export const FilestackPicker = ({
+    open,
+    toggle,
+    listItemId,
+}: {
+    open: boolean;
+    toggle: () => void;
+    listItemId: number;
+}) => {
+    // const [open, setOpen] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
     const dispatch = useDispatch();
 
-    const currentImageUrl = useSelector(selectCurrentImageUrl) || "";
+    const currentImageUrl =
+        // useSelector(selectCurrentImageUrl) ||
+        "";
     const [uploadedFile, setUploadedFile] = useState({
         ...initUploadedFileState,
-        url: currentImageUrl,
+        url: "", // tempo hide, TODO: multiple load
     });
 
     // TODO: use selectors
     // const locale = useSelector(selectCurrentUserLocale);
     const locale = "en";
 
-    const handleOpen = () => {
-        setOpen(true);
-    };
+    // const handleOpen = () => {
+    //     toggle();
+    // };
 
-    const handleClose = () => {
-        setOpen(false);
-    };
+    const handleClose = useCallback(() => {
+        toggle();
+    }, [toggle]);
 
     const updateImage = useCallback((file) => {
         setUploadedFile(file);
@@ -53,13 +62,13 @@ export const FilestackPicker = () => {
         (files: PickerFileMeta[]) => {
             const file = files[0];
             updateImage(file);
-            dispatch(quizItemUploadImageAsync(file.url));
+            dispatch(quizItemUploadImageAsync({ quizItemImageUrl: file.url, listItemId }));
             handleClose();
             setTimeout(() => {
                 enqueueSnackbar("Image was successfully loaded", { variant: "success" });
             }, 1000);
         },
-        [enqueueSnackbar, updateImage, dispatch],
+        [enqueueSnackbar, updateImage, handleClose, dispatch],
     );
 
     const { containerSelector } = useFilepicker({
@@ -82,15 +91,20 @@ export const FilestackPicker = () => {
 
     return (
         <div>
-            <Button variant="outlined" color="primary" onClick={handleOpen}>
-                Upload image
-            </Button>
+            {/*<Button variant="outlined" color="primary" onClick={handleOpen}>*/}
+            {/*    Upload image*/}
+            {/*</Button>*/}
             <div>
                 {uploadedFile && (
                     <img
                         src={uploadedFile.url}
                         alt={uploadedFile.filename}
-                        style={{ maxWidth: "100%", marginTop: "20px" }}
+                        style={{
+                            maxWidth: "100%",
+                            maxHeight: "300px",
+                            display: "block",
+                            margin: "20px auto",
+                        }}
                     />
                 )}
             </div>

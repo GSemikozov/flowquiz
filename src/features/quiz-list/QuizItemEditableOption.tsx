@@ -6,6 +6,8 @@ import {
     // toggleQuestionsListOptionChecked,
     getCurrentListItemOptionsSelector,
     getCurrentListItemOptionsStatusSelector,
+    getCurrentListItemOptionsOpenAnswerSelector,
+    addQuestionsListOption,
 } from "./quizListSlice";
 import {
     Collapse,
@@ -65,8 +67,16 @@ const useStyles = makeStyles((theme) => ({
             content: "counter(alphabeticList, upper-alpha)",
             speak: "counter(alphabeticList, upper-alpha)",
             position: "absolute",
-            top: 2,
-            left: 7,
+            top: 0,
+            left: 0,
+            fontSize: "0.8rem",
+            width: "24px",
+            height: "24px",
+            lineHeight: "24px",
+            verticalAlign: "middle",
+            textAlign: "center",
+            color: "blue",
+            fontWeight: 600,
         },
     },
 }));
@@ -86,8 +96,11 @@ export const QuizItemEditableOption = ({
     const isTrue = useSelector(
         getCurrentListItemOptionsStatusSelector(store.getState(), quizListId, questionId),
     );
+    const isAnswerOpen = useSelector(
+        getCurrentListItemOptionsOpenAnswerSelector(store.getState(), quizListId, questionId),
+    );
     const currentItemOptions = useSelector(
-        getCurrentListItemOptionsSelector(store.getState(), questionId),
+        getCurrentListItemOptionsSelector(store.getState(), quizListId),
     );
 
     const dispatch = useDispatch();
@@ -95,11 +108,21 @@ export const QuizItemEditableOption = ({
     const [dbValue, saveToDb] = useState(""); // would be an API call normally
     const [answer, setAnswer] = useState("");
     const [title, setTitle] = useState(initialTitle);
-    const [isOpened, setIsOpened] = useState(true);
+    const [isOpened, setIsOpened] = useState(false);
 
-    const handleAnswerChange = (e: any) => {
-        setAnswer(e.target.value);
-    };
+    const handleAnswerChange = useCallback(
+        (e: any) => {
+            setAnswer((prev) => e.target.value);
+            dispatch(
+                updateQuestionsOptionAnswer({
+                    answer: e.target.value,
+                    questionId: questionId,
+                    quizListItemId: quizListId,
+                }),
+            );
+        },
+        [quizListId, questionId, setAnswer, dispatch],
+    );
 
     // const updateItemChecked = useCallback(
     //     (questionId) => {
@@ -128,28 +151,36 @@ export const QuizItemEditableOption = ({
         [dispatch, quizListId, questionId],
     );
 
-    const updateItemAnswer = useCallback(
-        ({ questionId }: { answer: string; questionId: number }) => {
-            console.log("UPDATE ANSWER: ", quizListId, questionId, answer);
-            dispatch(
-                updateQuestionsOptionAnswer({
-                    answer: answer,
-                    questionId: questionId,
-                    quizListItemId: quizListId,
-                }),
-            );
-        },
-        [dispatch, quizListId, answer],
-    );
-
-    const removeItem = useCallback(() => {
+    const updateItemAnswer = useCallback(() => {
+        console.log("UPDATE ANSWER");
         dispatch(
-            removeQuestionsListOption({
-                quizListItemId: quizListId,
+            updateQuestionsOptionAnswer({
+                answer: answer,
                 questionId: questionId,
+                quizListItemId: quizListId,
             }),
         );
+    }, [dispatch, questionId, quizListId, answer]);
+
+    const removeItem = useCallback(() => {
+        if (currentItemOptions && currentItemOptions.questions.length > 1) {
+            dispatch(
+                removeQuestionsListOption({
+                    quizListItemId: quizListId,
+                    questionId: questionId,
+                }),
+            );
+        }
     }, [dispatch, quizListId, questionId]);
+
+    const addMoreItem = useCallback(() => {
+        const newOptionData = {
+            quizListItemId: quizListId,
+            quizListItemOption: { id: Date.now(), title: "", answer: "", isTrue: false },
+        };
+
+        dispatch(addQuestionsListOption(newOptionData));
+    }, [dispatch, quizListId]);
 
     const initialRender = useRef(true);
 
@@ -171,6 +202,10 @@ export const QuizItemEditableOption = ({
         console.log("atLeastOneTrue", atLeastOneTrue);
     }, [currentItemOptions]);
 
+    useEffect(() => {
+        setIsOpened(isAnswerOpen);
+    }, [isAnswerOpen]);
+
     return (
         <>
             <ListItem
@@ -183,14 +218,15 @@ export const QuizItemEditableOption = ({
                     <CheckBoxOutlineBlankIcon />
                 </ListItemIcon>
                 <ListItemText>
-                    <QuizItemEditableInput name={name} title={title} saveToDb={saveToDb} />
+                    <QuizItemEditableInput
+                        name={name}
+                        title={title}
+                        saveToDb={saveToDb}
+                        onPressEnter={addMoreItem}
+                        onPressBackspace={removeItem}
+                    />
                 </ListItemText>
                 <ListItemSecondaryAction>
-                    <Tooltip title="Set answers" aria-label="Set answers">
-                        <IconButton onClick={() => setIsOpened((prev) => !prev)} title="set answer">
-                            <QuestionAnswerIcon color={isOpened ? "primary" : "inherit"} />
-                        </IconButton>
-                    </Tooltip>
                     <Tooltip title="Remove" aria-label="Remove">
                         <IconButton edge="end" aria-label="delete" onClick={removeItem}>
                             <DeleteIcon />
@@ -219,9 +255,6 @@ export const QuizItemEditableOption = ({
                             placeholder={`Place your comment here`}
                             value={answer}
                             onChange={(e) => handleAnswerChange(e)}
-                            onBlur={() =>
-                                updateItemAnswer({ answer: "hello", questionId: questionId })
-                            }
                         />
                     </Grid>
                 </Grid>

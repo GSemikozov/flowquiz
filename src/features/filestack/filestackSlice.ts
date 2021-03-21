@@ -3,6 +3,11 @@ import { AppThunk, RootState } from "../../app/store";
 
 type quizItemImageUrlType = string;
 
+type quizItemImageUploadType = {
+    quizItemImageUrl: quizItemImageUrlType;
+    listItemId: number;
+};
+
 const initialState = {
     quizItemImageUrl: "",
 };
@@ -19,9 +24,10 @@ const quizItemImage = createSlice({
 
 export const { quizItemImageUpload } = quizItemImage.actions;
 
-export const quizItemUploadImageAsync = (quizItemImageUrl: quizItemImageUrlType): AppThunk => (
-    dispatch,
-) => {
+export const quizItemUploadImageAsync = ({
+    quizItemImageUrl,
+    listItemId,
+}: quizItemImageUploadType): AppThunk => (dispatch) => {
     setTimeout(() => {
         dispatch(quizItemImageUpload(quizItemImageUrl));
         window.localStorage.setItem("file", quizItemImageUrl); // TODO: save to DB instead of localStorage
@@ -34,7 +40,7 @@ export const quizItemUploadImageAsync = (quizItemImageUrl: quizItemImageUrlType)
 //
 // export const selectCurrentAvatarUrl = (state: RootState) => selectCurrentUser(state).quizes;
 
-export const selectCurrentImageUrl = (state: RootState) =>
-    state.quizItemImage.quizItemImageUrl || window.localStorage.getItem("file"); // TODO: get from DB instead of localStorage
+// export const selectCurrentImageUrl = (state: RootState) =>
+//     state.quizItemImage.quizItemImageUrl || window.localStorage.getItem("file"); // TODO: get from DB/store instead of localStorage
 
 export default quizItemImage.reducer;

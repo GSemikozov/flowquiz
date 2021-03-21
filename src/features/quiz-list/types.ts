@@ -8,7 +8,11 @@ export type questionsItem = {
 export type quizListItemType = {
     id: number;
     title: string;
-    completed: boolean;
+    description?: string;
+    description2?: string;
+    imageUrl?: string;
+    isActive?: boolean;
+    completed?: boolean;
     questions?: questionsItem[];
 };
 

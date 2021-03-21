@@ -6,26 +6,36 @@ const initialState = {
     quizList: [
         {
             id: Date.now(),
-            title: "Options 1",
+            title: "Question 1",
+            description: "",
+            description2: "",
+            imageUrl: "",
+            isActive: false,
             completed: false,
             questions: [
                 {
                     id: Date.now() + 1,
                     title: "Option",
                     answer: "",
+                    isOpen: false,
                     isTrue: false,
                 },
             ],
         },
         {
             id: Date.now() + 2,
-            title: "Options 2",
+            title: "Question 2",
+            description: "",
+            description2: "",
+            imageUrl: "",
+            isActive: false,
             completed: false,
             questions: [
                 {
                     id: Date.now() + 3,
                     title: "Option",
                     answer: "",
+                    isOpen: false,
                     isTrue: false,
                 },
             ],
@@ -33,19 +43,23 @@ const initialState = {
     ],
 };
 
-// let nextTodoId = 0;
-
 const getRandomId = () => Math.round(Math.random() * 10);
 
 const getDummyListItem = () => {
     return {
         id: getRandomId(),
-        title: "",
+        title: "Question",
+        description: "",
+        description2: "",
+        imageUrl: "",
+        isActive: false,
         completed: false,
         questions: [
             {
                 id: getRandomId(),
-                title: "",
+                title: "Option",
+                answer: "",
+                isOpen: false,
                 isTrue: false,
             },
         ],
@@ -61,7 +75,6 @@ const getQuestion = ({
     quizListItemId: number;
     questionId: number;
 }) => {
-    console.log("getQuestion", quizListItemId, questionId);
     const item = state.quizList.find((item: any) => item.id === quizListItemId);
     return item.questions.find((question: any) => question.id === questionId);
 };
@@ -93,6 +106,33 @@ const quizListSlice = createSlice({
             if (item) {
                 // @ts-ignore
                 item.title = title;
+            }
+        },
+        updateQuizListItemDescription(state, action) {
+            const { description, quizListItemId } = action.payload;
+            const item = state.quizList.find((item) => item.id === quizListItemId);
+            console.log("updateQuizListItem description", description, quizListItemId, item);
+            if (item) {
+                // @ts-ignore
+                item.description = description;
+            }
+        },
+        updateQuizListItemDescription2(state, action) {
+            const { description2, quizListItemId } = action.payload;
+            const item = state.quizList.find((item) => item.id === quizListItemId);
+            console.log("updateQuizListItem description", description2, quizListItemId, item);
+            if (item) {
+                // @ts-ignore
+                item.description2 = description2;
+            }
+        },
+        updateQuizListItemImg(state, action) {
+            const { imageUrl, quizListItemId } = action.payload;
+            const item = state.quizList.find((item) => item.id === quizListItemId);
+            console.log("updateQuizListItem img", imageUrl, quizListItemId, item);
+            if (item) {
+                // @ts-ignore
+                item.imageUrl = imageUrl;
             }
         },
         toggleQuizListItem(state, action) {
@@ -161,8 +201,6 @@ const quizListSlice = createSlice({
             const { quizListItemId, questionId, answer } = action.payload;
             const item = state.quizList.find((item) => item.id === quizListItemId);
             const question = item && getQuestion({ state, quizListItemId, questionId });
-            console.log("data from reducer: ", quizListItemId, questionId, answer);
-            console.log("question from reducer: ", question);
 
             if (question) {
                 // @ts-ignore
@@ -173,8 +211,6 @@ const quizListSlice = createSlice({
             const { quizListItemId, questionId, title } = action.payload;
             const item = state.quizList.find((item) => item.id === quizListItemId);
             const question = item && getQuestion({ state, quizListItemId, questionId });
-            console.log("data from reducer: ", quizListItemId, questionId, title);
-            console.log("question from reducer: ", question);
 
             if (question) {
                 // @ts-ignore
@@ -194,6 +230,27 @@ const quizListSlice = createSlice({
                     }
                 });
         },
+        openAllAnswerFields(state) {
+            state.quizList.map((item) => {
+                const modifiedItem = item.questions.map((question) => (question.isOpen = true));
+                return {
+                    ...item,
+                    ...modifiedItem,
+                };
+            });
+        },
+        closeAllAnswerFields(state) {
+            state.quizList.forEach((item) =>
+                item.questions.forEach((question) => (question.isOpen = false)),
+            );
+        },
+        setListItemActive(state, action) {
+            const activeItem = state.quizList.find((item) => item.id === action.payload);
+
+            if (activeItem) {
+                activeItem.isActive = true;
+            }
+        },
     },
 });
 
@@ -202,6 +259,9 @@ export const {
     updateQuizListItem,
     toggleQuizListItem,
     updateQuizListItemTitle,
+    updateQuizListItemDescription,
+    updateQuizListItemDescription2,
+    updateQuizListItemImg,
     postQuizList,
     addQuestionsListOption,
     removeQuestionsListOption,
@@ -210,6 +270,9 @@ export const {
     updateQuestionsOptionAnswer,
     updateQuestionsListOptionTitle,
     toggleQuestionsListOptionChecked,
+    openAllAnswerFields,
+    closeAllAnswerFields,
+    setListItemActive,
 } = quizListSlice.actions;
 
 export const quizListPostAsync = (quizList: quizListType): AppThunk => (dispatch) => {
@@ -240,6 +303,17 @@ export const getCurrentListItemOptionsStatusSelector = (
         const item = list.find((item) => item.id === quizListItemId);
         const question = item?.questions.find((question) => question.id === quizQuestionId);
         return question && question.isTrue;
+    });
+
+export const getCurrentListItemOptionsOpenAnswerSelector = (
+    state: RootState,
+    quizListItemId: number,
+    quizQuestionId: number,
+) =>
+    createSelector(getListSelector, (list) => {
+        const item = list.find((item) => item.id === quizListItemId);
+        const question = item?.questions.find((question) => question.id === quizQuestionId);
+        return question ? question.isOpen : false;
     });
 
 export const getCurrentListItemIdSelector = (state: RootState, quizQuestionId: number) =>

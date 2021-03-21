@@ -75,10 +75,7 @@ export const QuizItemEditableOptions = ({ id }: { id: number }) => {
                 style={{ marginBottom: "20px", marginTop: "8px" }}
                 alignItems="center"
             >
-                <Grid item style={{ paddingLeft: "20px", paddingRight: "12px" }}>
-                    <RadioButtonUncheckedIcon color="disabled" />
-                </Grid>
-                <Grid item>
+                <Grid item style={{ paddingLeft: "20px" }}>
                     <TextField
                         className={classes.formControl}
                         placeholder="Add more option"

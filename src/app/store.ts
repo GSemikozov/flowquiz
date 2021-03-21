@@ -1,7 +1,7 @@
 import { configureStore, ThunkAction, Action, getDefaultMiddleware } from "@reduxjs/toolkit";
-import counterReducer from "../features/counter/counterSlice";
-import quizItemImageReducer from "../features/filestack/filestackSlice";
 import quizListReducer from "../features/quiz-list/quizListSlice";
+import quizSettingsReducer from "../features/quiz-settings/quizSettingsSlice";
+import quizNavigationReducer from "../features/quiz-navigation/quizNavigationSlice";
 
 const middleware = getDefaultMiddleware({
     immutableCheck: false,
@@ -11,8 +11,8 @@ const middleware = getDefaultMiddleware({
 
 export const store = configureStore({
     reducer: {
-        counter: counterReducer,
-        quizItemImage: quizItemImageReducer,
+        quizNavigation: quizNavigationReducer,
+        quizSettings: quizSettingsReducer,
         quizList: quizListReducer,
     },
     middleware,

@@ -22,13 +22,17 @@ export const QuizItemEditableInput = ({
     name,
     title,
     saveToDb,
+    onPressEnter,
+    onPressBackspace,
 }: {
     name: string;
     title: string;
     saveToDb: Dispatch<SetStateAction<string>>;
+    onPressEnter: () => void;
+    onPressBackspace: () => void;
 }) => {
     const classes = useStyles();
-    const { handleChange, toggleEditMode, editMode } = useEditableText(title);
+    const { handleChange, toggleEditMode, editMode, text } = useEditableText(title);
     console.log("editEdit", editMode);
 
     const debouncedSave = useRef(
@@ -55,6 +59,16 @@ export const QuizItemEditableInput = ({
             // error={text === ""}
             onChange={(e) => {
                 handleOnChange(e);
+            }}
+            onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                    onPressEnter();
+                }
+            }}
+            onKeyDown={(e) => {
+                if (e.key === "Backspace" && text === "") {
+                    onPressBackspace();
+                }
             }}
             // disabled={!editMode}
             className={classes.textField}

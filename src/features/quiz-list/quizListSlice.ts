@@ -1,12 +1,16 @@
 import { createSelector, createSlice } from "@reduxjs/toolkit";
 import { AppThunk, RootState } from "../../app/store";
 import { quizListType } from "./types";
+import { getUuid } from "../../helpers";
 
 const initialState = {
     quizList: [
         {
-            id: Date.now(),
-            title: "Question 1",
+            id: "5d23aae4-f7f9-4683-9db5-868435452779",
+            title: {
+                text: "Title 1",
+                isVisible: true,
+            },
             description: "",
             description2: "",
             imageUrl: "",
@@ -14,7 +18,7 @@ const initialState = {
             completed: false,
             questions: [
                 {
-                    id: Date.now() + 1,
+                    id: "5cba",
                     title: "Option",
                     answer: "",
                     isOpen: false,
@@ -23,8 +27,11 @@ const initialState = {
             ],
         },
         {
-            id: Date.now() + 2,
-            title: "Question 2",
+            id: "5d23aae4-f7f9-4683-9db5-868435452780",
+            title: {
+                text: "Title 2",
+                isVisible: true,
+            },
             description: "",
             description2: "",
             imageUrl: "",
@@ -32,7 +39,7 @@ const initialState = {
             completed: false,
             questions: [
                 {
-                    id: Date.now() + 3,
+                    id: "5abc",
                     title: "Option",
                     answer: "",
                     isOpen: false,
@@ -43,12 +50,13 @@ const initialState = {
     ],
 };
 
-const getRandomId = () => Math.round(Math.random() * 10);
-
 const getDummyListItem = () => {
     return {
-        id: getRandomId(),
-        title: "Question",
+        id: getUuid(),
+        title: {
+            text: "Title",
+            isVisible: true,
+        },
         description: "",
         description2: "",
         imageUrl: "",
@@ -56,7 +64,7 @@ const getDummyListItem = () => {
         completed: false,
         questions: [
             {
-                id: getRandomId(),
+                id: getUuid(),
                 title: "Option",
                 answer: "",
                 isOpen: false,
@@ -102,16 +110,25 @@ const quizListSlice = createSlice({
         updateQuizListItemTitle(state, action) {
             const { title, quizListItemId } = action.payload;
             const item = state.quizList.find((item) => item.id === quizListItemId);
-            console.log("updateQuizListItemTitle", title, quizListItemId, item);
+
             if (item) {
                 // @ts-ignore
-                item.title = title;
+                item.title.text = title;
+            }
+        },
+        toggleTitle(state, action) {
+            const quizListItemId = action.payload;
+            const item = state.quizList.find((item) => item.id === quizListItemId);
+
+            if (item) {
+                // @ts-ignore
+                item.title.isVisible = !item.title.isVisible;
             }
         },
         updateQuizListItemDescription(state, action) {
             const { description, quizListItemId } = action.payload;
             const item = state.quizList.find((item) => item.id === quizListItemId);
-            console.log("updateQuizListItem description", description, quizListItemId, item);
+
             if (item) {
                 // @ts-ignore
                 item.description = description;
@@ -120,7 +137,7 @@ const quizListSlice = createSlice({
         updateQuizListItemDescription2(state, action) {
             const { description2, quizListItemId } = action.payload;
             const item = state.quizList.find((item) => item.id === quizListItemId);
-            console.log("updateQuizListItem description", description2, quizListItemId, item);
+
             if (item) {
                 // @ts-ignore
                 item.description2 = description2;
@@ -133,6 +150,15 @@ const quizListSlice = createSlice({
             if (item) {
                 // @ts-ignore
                 item.imageUrl = imageUrl;
+            }
+        },
+        removeQuizListItemImg(state, action) {
+            const { quizListItemId } = action.payload;
+            const item = state.quizList.find((item) => item.id === quizListItemId);
+            console.log("REMOVE img", quizListItemId, item);
+            if (item) {
+                // @ts-ignore
+                item.imageUrl = "";
             }
         },
         toggleQuizListItem(state, action) {
@@ -148,7 +174,7 @@ const quizListSlice = createSlice({
         },
         addQuestionsListOption(state, action) {
             const item = state.quizList.find((item) => item.id === action.payload.quizListItemId);
-            console.log("addQuestionsListOption item", item, action.payload.quizListItemOption);
+
             if (item) {
                 // @ts-ignore
                 item.questions.push(action.payload.quizListItemOption);
@@ -156,7 +182,7 @@ const quizListSlice = createSlice({
         },
         removeQuestionsListOption(state, action) {
             const item = state.quizList.find((item) => item.id === action.payload.quizListItemId);
-            console.log("remove item", item, action.payload);
+
             if (item) {
                 // @ts-ignore
                 item.questions = item.questions.filter(
@@ -184,8 +210,6 @@ const quizListSlice = createSlice({
             const { quizListItemId, questionId, title, isTrue, answer } = action.payload;
             const item = state.quizList.find((item) => item.id === quizListItemId);
             const question = item && getQuestion({ ...state, ...quizListItemId, ...questionId });
-            console.log("data from reducer: ", quizListItemId, questionId, title, isTrue, answer);
-            console.log("question from reducer: ", question);
 
             if (question) {
                 // @ts-ignore
@@ -230,19 +254,45 @@ const quizListSlice = createSlice({
                     }
                 });
         },
-        openAllAnswerFields(state) {
+        openAllAnswerFields(state, action) {
+            // const { quizListItemId } = action.payload;
+            // const item = state.quizList.find((item) => item.id === quizListItemId);
+
+            // if (item) {
+            //     return item.questions.map((question) => (question.isOpen = true));
+            // }
+
             state.quizList.map((item) => {
-                const modifiedItem = item.questions.map((question) => (question.isOpen = true));
-                return {
-                    ...item,
-                    ...modifiedItem,
-                };
+                const modifiedItem =
+                    item.id === action.payload &&
+                    item.questions.map((question) => (question.isOpen = true));
+
+                if (modifiedItem) {
+                    return {
+                        ...modifiedItem,
+                    };
+                } else {
+                    return {
+                        ...item,
+                    };
+                }
             });
         },
-        closeAllAnswerFields(state) {
-            state.quizList.forEach((item) =>
-                item.questions.forEach((question) => (question.isOpen = false)),
-            );
+        closeAllAnswerFields(state, action) {
+            const item = state.quizList.find((item) => item.id === action.payload);
+            console.log("REDUCER closeAllAnswerFields payload", JSON.stringify(item));
+
+            item &&
+                item.questions.map((question) => {
+                    return (question.isOpen = false);
+                });
+        },
+        closeTotallyAllAnswerFields(state) {
+            state.quizList.map((item) => {
+                item.questions.map((question) => {
+                    return (question.isOpen = false);
+                });
+            });
         },
         setListItemActive(state, action) {
             const activeItem = state.quizList.find((item) => item.id === action.payload);
@@ -262,6 +312,7 @@ export const {
     updateQuizListItemDescription,
     updateQuizListItemDescription2,
     updateQuizListItemImg,
+    removeQuizListItemImg,
     postQuizList,
     addQuestionsListOption,
     removeQuestionsListOption,
@@ -272,13 +323,15 @@ export const {
     toggleQuestionsListOptionChecked,
     openAllAnswerFields,
     closeAllAnswerFields,
+    closeTotallyAllAnswerFields,
     setListItemActive,
+    toggleTitle,
 } = quizListSlice.actions;
 
 export const quizListPostAsync = (quizList: quizListType): AppThunk => (dispatch) => {
     setTimeout(() => {
         dispatch(postQuizList(quizList));
-        window.localStorage.setItem("file", JSON.stringify(quizList)); // TODO: save to DB instead of localStorage
+        window.localStorage.setItem("quizList", JSON.stringify(quizList)); // TODO: save to DB instead of localStorage
     }, 1000);
 };
 
@@ -288,16 +341,15 @@ export const getListSelector = (state: RootState) => {
     return res.quizList;
 };
 
-export const getCurrentListItemSelector = (state: RootState, id: number) =>
+export const getCurrentListItemSelector = (id: string) =>
     createSelector(getListSelector, (list) => list.find((item) => item.id === id));
 
-export const getCurrentListItemOptionsSelector = (state: RootState, quizQuestionId: number) =>
+export const getCurrentListItemOptionsSelector = (quizQuestionId: string) =>
     createSelector(getListSelector, (list) => list.find((item) => item.id === quizQuestionId));
 
 export const getCurrentListItemOptionsStatusSelector = (
-    state: RootState,
-    quizListItemId: number,
-    quizQuestionId: number,
+    quizListItemId: string,
+    quizQuestionId: string,
 ) =>
     createSelector(getListSelector, (list) => {
         const item = list.find((item) => item.id === quizListItemId);
@@ -306,19 +358,35 @@ export const getCurrentListItemOptionsStatusSelector = (
     });
 
 export const getCurrentListItemOptionsOpenAnswerSelector = (
-    state: RootState,
-    quizListItemId: number,
-    quizQuestionId: number,
+    quizListItemId: string,
+    quizQuestionId: string,
 ) =>
     createSelector(getListSelector, (list) => {
         const item = list.find((item) => item.id === quizListItemId);
         const question = item?.questions.find((question) => question.id === quizQuestionId);
+        console.log(
+            "From selector check if ANSWER open",
+            question?.isOpen,
+            "quizListItemId: ",
+            quizListItemId,
+            "quizQuestionId: ",
+            quizQuestionId,
+        );
         return question ? question.isOpen : false;
+    });
+
+export const getCurrentListItemOptionsAnswerStatusSelector = (
+    quizListItemId: string,
+    quizQuestionId: string,
+) =>
+    createSelector(getListSelector, (list) => {
+        const item = list.find((item) => item.id === quizListItemId);
+        const question = item?.questions.find((question) => question.id === quizQuestionId);
+        return question ? question.isTrue : false;
     });
 
 export const getCurrentListItemIdSelector = (state: RootState, quizQuestionId: number) =>
     createSelector(getListSelector, (list) => {
-        console.log("ge id selector", quizQuestionId);
         // list.filter(item => item.id === quizQuestionId)[0].id
     });
 

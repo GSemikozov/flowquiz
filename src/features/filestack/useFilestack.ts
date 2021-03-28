@@ -88,6 +88,7 @@ export const useFilepicker = ({
             ...baseOptions,
             container: containerSelector,
             displayMode: PickerDisplayMode.inline,
+            disableTransformer: true, // edit mode disabled
             onUploadDone: ({ filesUploaded }: PickerResponse) => {
                 console.log("Filestack upload done");
                 onFilesLoad && onFilesLoad(prepareUploadedFiles(filesUploaded));

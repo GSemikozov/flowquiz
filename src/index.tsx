@@ -8,19 +8,32 @@ import { Provider } from "react-redux";
 import * as serviceWorker from "./serviceWorker";
 import { initSentry } from "./services/sentry/sentry";
 import { SnackbarProvider } from "notistack";
+import { BrowserRouter, Link, Redirect, Route, Switch } from "react-router-dom";
+import { Navbar } from "./components/Navbar/Navbar";
 
 initSentry({
     dsn: "https://ddb501c2d40e4a55842b80dc677ec4fa@o508217.ingest.sentry.io/5600418",
 }); // TODO: state.app.config.sentry - put dsn and env there
 
 ReactDOM.render(
-    <React.StrictMode>
-        <Provider store={store}>
-            <SnackbarProvider maxSnack={3}>
-                <App />
-            </SnackbarProvider>
-        </Provider>
-    </React.StrictMode>,
+    <Provider store={store}>
+        <SnackbarProvider maxSnack={3}>
+            <BrowserRouter>
+                <Navbar />
+                <Switch>
+                    <Route exact={true} path="/edit/:id">
+                        <App />
+                    </Route>
+                    <Route exact={true} path="/">
+                        <div style={{ marginTop: "100px", textAlign: "center" }}>Home</div>
+                    </Route>
+                    <Route exact={false} path="/">
+                        <Redirect to="/" />
+                    </Route>
+                </Switch>
+            </BrowserRouter>
+        </SnackbarProvider>
+    </Provider>,
     document.getElementById("root"),
 );
 

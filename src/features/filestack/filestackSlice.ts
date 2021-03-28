@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppThunk, RootState } from "../../app/store";
+import { updateQuizListItemImg } from "../quiz-list/quizListSlice";
 
 type quizItemImageUrlType = string;
 
 type quizItemImageUploadType = {
     quizItemImageUrl: quizItemImageUrlType;
-    listItemId: number;
+    listItemId: string;
 };
 
 const initialState = {
@@ -30,6 +31,7 @@ export const quizItemUploadImageAsync = ({
 }: quizItemImageUploadType): AppThunk => (dispatch) => {
     setTimeout(() => {
         dispatch(quizItemImageUpload(quizItemImageUrl));
+        dispatch(updateQuizListItemImg({ imageUrl: quizItemImageUrl, quizListItemId: listItemId }));
         window.localStorage.setItem("file", quizItemImageUrl); // TODO: save to DB instead of localStorage
     }, 1000);
 };

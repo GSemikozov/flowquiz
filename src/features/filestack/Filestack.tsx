@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { PickerFileMeta, useFilepicker } from "./useFilestack";
 import { useSnackbar } from "notistack";
 import AppBar from "@material-ui/core/AppBar";
@@ -7,6 +7,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Dialog from "@material-ui/core/Dialog";
 import { quizItemUploadImageAsync } from "./filestackSlice";
+import { getCurrentListItemSelector } from "../quiz-list/quizListSlice";
 
 const initUploadedFileState = {
     filename: "",
@@ -28,15 +29,15 @@ export const FilestackPicker = ({
 }: {
     open: boolean;
     toggle: () => void;
-    listItemId: number;
+    listItemId: string;
 }) => {
     // const [open, setOpen] = useState(false);
+    // const [updatedImage, setUpdatedImage] = useState(""); // TODO: rm if not needed.
     const { enqueueSnackbar } = useSnackbar();
     const dispatch = useDispatch();
 
-    const currentImageUrl =
-        // useSelector(selectCurrentImageUrl) ||
-        "";
+    const listItem = useSelector(getCurrentListItemSelector(listItemId));
+    const currentImageUrl = listItem?.imageUrl || "";
     const [uploadedFile, setUploadedFile] = useState({
         ...initUploadedFileState,
         url: "", // tempo hide, TODO: multiple load
@@ -81,13 +82,41 @@ export const FilestackPicker = ({
         immediate: true,
     });
 
-    useEffect(() => {
-        console.log("uploaded files: ", uploadedFile);
-    }, [uploadedFile]);
+    // useEffect(() => {
+    //     console.log("uploaded files: ", uploadedFile);
+    //     setUpdatedImage(uploadedFile.previewUrl || currentImageUrl);
+    // }, [uploadedFile]);
 
     useEffect(() => {
         console.log("currentImageUrl: ", currentImageUrl);
     }, [currentImageUrl]);
+
+    // useEffect(() => {
+    //     setUpdatedImage(currentImageUrl);
+    // }, []);
+
+    useEffect(() => {
+        console.log("Filestack RERENDER");
+    }, []);
+
+    const ThumbImg = () =>
+        useMemo(
+            () => (
+                <img
+                    src={currentImageUrl}
+                    alt={uploadedFile.filename}
+                    style={{
+                        maxWidth: "100%",
+                        maxHeight: "300px",
+                        display: "block",
+                        margin: "0 auto",
+                    }}
+                />
+            ),
+            [uploadedFile, currentImageUrl],
+        );
+
+    // const MemoizedImg = React.memo(ThumbImg);
 
     return (
         <div>
@@ -95,18 +124,11 @@ export const FilestackPicker = ({
             {/*    Upload image*/}
             {/*</Button>*/}
             <div>
-                {uploadedFile && (
-                    <img
-                        src={uploadedFile.url}
-                        alt={uploadedFile.filename}
-                        style={{
-                            maxWidth: "100%",
-                            maxHeight: "300px",
-                            display: "block",
-                            margin: "20px auto",
-                        }}
-                    />
-                )}
+                {/*<MemoizedImg*/}
+                {/*    uploadedFile={uploadedFile}*/}
+                {/*    updatedImage={updatedImage}*/}
+                {/*/>*/}
+                <ThumbImg />
             </div>
             <Dialog fullScreen open={open} onClose={handleClose}>
                 <AppBar style={{ position: "relative" }}>

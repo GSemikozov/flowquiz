@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { Props, useCallback, useEffect, useRef, useState } from "react";
 import {
     removeQuestionsListOption,
     updateQuestionsOptionAnswer,
@@ -8,15 +8,27 @@ import {
     getCurrentListItemOptionsStatusSelector,
     getCurrentListItemOptionsOpenAnswerSelector,
     addQuestionsListOption,
+    openAllAnswerFields,
+    closeAllAnswerFields,
+    closeTotallyAllAnswerFields,
+    toggleQuestionsListOptionChecked,
+    getCurrentListItemOptionsAnswerStatusSelector,
+    getCurrentListItemSelector,
 } from "./quizListSlice";
 import {
+    Checkbox,
     Collapse,
+    FormControlLabel,
+    FormGroup,
     Grid,
     IconButton,
+    List,
     ListItem,
     ListItemIcon,
     ListItemSecondaryAction,
     ListItemText,
+    ListSubheader,
+    Switch,
     TextareaAutosize,
     Tooltip,
 } from "@material-ui/core";
@@ -28,9 +40,15 @@ import { makeStyles } from "@material-ui/core/styles";
 import { QuizItemEditableInput } from "./QuizItemEditableInput";
 // import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 // import EditIcon from "@material-ui/icons/Edit";
+import Cancel from "@material-ui/icons/Cancel";
+import CheckCircle from "@material-ui/icons/CheckCircle";
 import DeleteIcon from "@material-ui/icons/Delete";
 import QuestionAnswerIcon from "@material-ui/icons/QuestionAnswer";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import { QuestionAnswer } from "@material-ui/icons";
+import withStyles from "@material-ui/core/styles/withStyles";
+import { green, grey, purple } from "@material-ui/core/colors";
+import { useParams } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     label: {
@@ -59,6 +77,10 @@ const useStyles = makeStyles((theme) => ({
     },
     listItem: {
         counterIncrement: "alphabeticList",
+        border: "1px solid #E3E7EB",
+        borderRadius: "8px",
+        margin: "0 24px 8px",
+        width: "auto",
     },
     listItemIcon: {
         minWidth: 40,
@@ -81,6 +103,132 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+const useSwitchStyles = makeStyles((theme) => ({
+    root: {
+        width: 42,
+        height: 26,
+        padding: 0,
+        margin: theme.spacing(1),
+    },
+    switchBase: {
+        padding: 1,
+        "&$checked": {
+            transform: "translateX(16px)",
+            color: theme.palette.common.white,
+            "& + $track": {
+                backgroundColor: "#52d869",
+                opacity: 1,
+                border: "none",
+            },
+        },
+        "&$focusVisible $thumb": {
+            color: "#52d869",
+            border: "6px solid #fff",
+        },
+    },
+    thumb: {
+        width: 24,
+        height: 24,
+    },
+    track: {
+        borderRadius: 26 / 2,
+        border: `1px solid ${theme.palette.grey[400]}`,
+        backgroundColor: theme.palette.grey[50],
+        opacity: 1,
+        transition: theme.transitions.create(["background-color", "border"]),
+    },
+    checked: {},
+    focusVisible: {},
+}));
+
+/* move for future */
+const IOSSwitch = ({ ...props }) => {
+    const classes = useSwitchStyles();
+
+    return (
+        <Switch
+            focusVisibleClassName={classes.focusVisible}
+            disableRipple
+            classes={{
+                root: classes.root,
+                switchBase: classes.switchBase,
+                thumb: classes.thumb,
+                track: classes.track,
+                checked: classes.checked,
+            }}
+            {...props}
+        />
+    );
+};
+
+const GreenSwitch = withStyles({
+    switchBase: {
+        color: grey[100],
+        "&$checked": {
+            color: green[500],
+        },
+        "&$checked + $track": {
+            backgroundColor: green[500],
+        },
+        "&$focusVisible $thumb": {
+            color: green[500],
+        },
+    },
+    checked: {},
+    track: {},
+})(Switch);
+
+export const ToggleCorrectAnswer = ({
+    quizListItemId,
+    questionId,
+}: {
+    quizListItemId: string;
+    questionId: string;
+}) => {
+    const dispatch = useDispatch();
+
+    const isTrue = useSelector(
+        getCurrentListItemOptionsAnswerStatusSelector(quizListItemId, questionId),
+    );
+
+    const [checked, setChecked] = React.useState(isTrue);
+
+    const handleToggle = useCallback(() => {
+        setChecked((prev) => !prev);
+    }, []);
+
+    useEffect(() => {
+        // checked ? (
+        //     dispatch(openAllAnswerFields(quizListItemId))
+        // ) : (
+        //     dispatch(closeAllAnswerFields(quizListItemId))
+        // )
+        console.log("go and dispatch");
+        // dispatch(toggleQuestionsListOptionChecked({quizListItemId, questionId}));
+    }, [checked, dispatch]);
+
+    useEffect(() => {
+        console.log("isTrue changed", isTrue);
+    }, [isTrue]);
+
+    return (
+        <FormGroup>
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        icon={<Cancel color={isTrue ? "error" : "action"} />}
+                        checkedIcon={<CheckCircle color="primary" />}
+                        onChange={handleToggle}
+                        checked={checked}
+                    />
+                }
+                label=""
+                style={{ marginRight: "0" }}
+            />
+        </FormGroup>
+    );
+};
+
 export const QuizItemEditableOption = ({
     initialTitle,
     name,
@@ -89,19 +237,14 @@ export const QuizItemEditableOption = ({
 }: {
     initialTitle: string;
     name: string;
-    quizListId: number;
-    questionId: number;
+    quizListId: string;
+    questionId: string;
 }) => {
-    const store = useStore();
-    const isTrue = useSelector(
-        getCurrentListItemOptionsStatusSelector(store.getState(), quizListId, questionId),
-    );
+    const isTrue = useSelector(getCurrentListItemOptionsStatusSelector(quizListId, questionId));
     const isAnswerOpen = useSelector(
-        getCurrentListItemOptionsOpenAnswerSelector(store.getState(), quizListId, questionId),
+        getCurrentListItemOptionsOpenAnswerSelector(quizListId, questionId),
     );
-    const currentItemOptions = useSelector(
-        getCurrentListItemOptionsSelector(store.getState(), quizListId),
-    );
+    const currentItemOptions = useSelector(getCurrentListItemOptionsSelector(quizListId));
 
     const dispatch = useDispatch();
     const classes = useStyles();
@@ -138,7 +281,6 @@ export const QuizItemEditableOption = ({
 
     const updateItemTitle = useCallback(
         ({ title }: { title: string }) => {
-            console.log("updateQuizListItemTitle: ", quizListId, title);
             // dispatch(updateQuizListItemTitle({title: title, id: quizListId}));
             dispatch(
                 updateQuestionsListOptionTitle({
@@ -174,9 +316,17 @@ export const QuizItemEditableOption = ({
     }, [dispatch, quizListId, questionId]);
 
     const addMoreItem = useCallback(() => {
+        const isOpened = currentItemOptions?.questions.find((question) => question.isOpen);
+        console.log("at least one opened", isOpened);
         const newOptionData = {
             quizListItemId: quizListId,
-            quizListItemOption: { id: Date.now(), title: "", answer: "", isTrue: false },
+            quizListItemOption: {
+                id: Date.now(),
+                title: "",
+                answer: "",
+                isTrue: false,
+                isOpen: isOpened,
+            },
         };
 
         dispatch(addQuestionsListOption(newOptionData));
@@ -185,7 +335,6 @@ export const QuizItemEditableOption = ({
     const initialRender = useRef(true);
 
     useEffect(() => {
-        console.log("will store dbValue", dbValue);
         setTitle(dbValue);
         if (initialRender.current) {
             initialRender.current = false;
@@ -195,16 +344,22 @@ export const QuizItemEditableOption = ({
     }, [dispatch, dbValue, updateItemTitle]);
 
     useEffect(() => {
-        console.log("currentItemOptions", currentItemOptions);
         const atLeastOneTrue =
             currentItemOptions?.questions.some((option) => option.isTrue) || false;
         setIsOpened(atLeastOneTrue);
         console.log("atLeastOneTrue", atLeastOneTrue);
     }, [currentItemOptions]);
 
+    // useEffect(() => {
+    //     console.log("isAnswerOpen ---------", isAnswerOpen, quizListId, questionId)
+    //     setIsOpened(isAnswerOpen);
+    // }, [isAnswerOpen]);
+
     useEffect(() => {
-        setIsOpened(isAnswerOpen);
-    }, [isAnswerOpen]);
+        console.log("quizListId in Option ----------", quizListId);
+        // setIsOpened(false);
+        dispatch(closeTotallyAllAnswerFields());
+    }, [quizListId, dispatch]);
 
     return (
         <>
@@ -226,7 +381,7 @@ export const QuizItemEditableOption = ({
                         onPressBackspace={removeItem}
                     />
                 </ListItemText>
-                <ListItemSecondaryAction>
+                <ListItemSecondaryAction style={{ right: "44px" }}>
                     <Tooltip title="Remove" aria-label="Remove">
                         <IconButton edge="end" aria-label="delete" onClick={removeItem}>
                             <DeleteIcon />
@@ -234,21 +389,28 @@ export const QuizItemEditableOption = ({
                     </Tooltip>
                 </ListItemSecondaryAction>
             </ListItem>
-            <Collapse in={isOpened} timeout="auto">
-                <Grid container spacing={1}>
+            <Collapse in={isAnswerOpen} timeout="auto">
+                <Grid container spacing={1} style={{ margin: "0 24px", alignItems: "center" }}>
+                    <Grid item style={{ padding: "8px 16px", boxSizing: "border-box" }}>
+                        {/*{!isTrue ? <Cancel color="error" /> : <CheckCircle color="secondary" />}*/}
+                        <ToggleCorrectAnswer quizListItemId={quizListId} questionId={questionId} />
+                    </Grid>
                     <Grid
                         item
-                        style={{ flexGrow: 1, margin: "0 16px 0 32px", boxSizing: "border-box" }}
+                        style={{
+                            flexGrow: 1,
+                            padding: "10px 10px 10px 0",
+                            boxSizing: "border-box",
+                        }}
                     >
                         <TextareaAutosize
                             style={{
                                 width: "100%",
-                                padding: "10px",
                                 boxSizing: "border-box",
                                 border: "none",
-                                borderLeft: `${isTrue ? "2px solid green" : "2px solid gray"}`,
                                 outline: "none",
                                 resize: "none",
+                                fontSize: "16px",
                             }}
                             aria-label="minimum height"
                             rowsMin={1}

@@ -1,11 +1,10 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { quizListItemType } from "./types";
 import { makeStyles } from "@material-ui/core/styles";
 import { Card, CardContent, CardHeader, IconButton, TextareaAutosize } from "@material-ui/core";
 import ImageIcon from "@material-ui/icons/Image";
 import { QuizListItemEditableTitle } from "./QuizListItemEditableTitle";
 import { QuizItemEditableOptions } from "./QuizItemEditableOptions";
-import { FilestackPicker } from "../filestack/Filestack";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import {
     getCurrentListItemSelector,
@@ -37,12 +36,13 @@ export const QuizItem = ({
     questions,
 }: ClickType & quizListItemType) => {
     const classes = useStyles();
-    const store = useStore();
-    const item = useSelector(getCurrentListItemSelector(store.getState(), id));
+    const item = useSelector(getCurrentListItemSelector(id));
 
-    const [open, setOpen] = useState(false); // filepicker
     const [description, setDescription] = useState(item?.description || "");
     const [description2, setDescription2] = useState(item?.description2 || "");
+
+    const isTitleVisible = title.isVisible;
+    const isImg = !!item?.imageUrl;
 
     const dispatch = useDispatch();
 
@@ -72,31 +72,36 @@ export const QuizItem = ({
         [dispatch, id, description, setDescription],
     );
 
+    useEffect(() => {
+        console.log("isTitleVisible updated", isTitleVisible);
+    }, [isTitleVisible]);
+
     return (
         <div style={{ marginBottom: "40px" }}>
             <div style={{ textAlign: "left" }}>
                 <Card>
-                    <CardHeader
-                        action={
-                            <IconButton onClick={() => setOpen((prev) => !prev)}>
-                                <ImageIcon />
-                            </IconButton>
-                        }
-                        title={<QuizListItemEditableTitle title={title} id={id} />}
-                        className={classes.cardHeader}
-                    />
                     <CardContent className={classes.cardContent}>
-                        <FilestackPicker
-                            open={open}
-                            toggle={() => setOpen((prev) => !prev)}
-                            listItemId={id}
-                        />
+                        {isImg && (
+                            <img
+                                src={item?.imageUrl}
+                                style={{
+                                    maxWidth: "100%",
+                                    maxHeight: "300px",
+                                    display: "block",
+                                    margin: "16px auto",
+                                }}
+                                alt="img"
+                            />
+                        )}
+                        {isTitleVisible && <QuizListItemEditableTitle title={title.text} id={id} />}
                         <div style={{ padding: "0 10px" }}>
                             <TextareaAutosize
                                 style={{
                                     width: "100%",
                                     padding: "10px",
                                     boxSizing: "border-box",
+                                    fontSize: "1rem",
+                                    color: "initial",
                                     border: "none",
                                     outline: "none",
                                     resize: "none",
@@ -104,7 +109,7 @@ export const QuizItem = ({
                                 aria-label="minimum height"
                                 rowsMin={1}
                                 rowsMax={5}
-                                placeholder="Your contents here"
+                                placeholder="Your answer"
                                 value={description}
                                 onChange={(e) => handleDescriptionChange(e)}
                             />
@@ -118,7 +123,6 @@ export const QuizItem = ({
                                     border: "none",
                                     outline: "none",
                                     resize: "none",
-                                    fontStyle: "italic",
                                 }}
                                 aria-label="minimum height"
                                 rowsMin={1}

@@ -32,7 +32,7 @@ export const QuestionOptionsAnswer = ({
     name,
     questions,
 }: {
-    id: number;
+    id: string;
     name: string;
     questions: questionsItem[];
 }) => {
@@ -58,7 +58,7 @@ export const QuestionOptionsAnswer = ({
     );
 
     const handleUpdateAnswer = useCallback(
-        ({ answer, questionId }: { answer: string; questionId: number }) => {
+        ({ answer, questionId }: { answer: string; questionId: string }) => {
             console.log("UPDATE ANSWER: ", id, questionId, answer);
             dispatch(updateQuestionsOptionAnswer({ answer, questionId, id }));
         },

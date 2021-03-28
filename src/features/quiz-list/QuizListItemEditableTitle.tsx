@@ -20,13 +20,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const QuizListItemEditableTitle = ({
-    title,
-    id,
-}: {
-    title: string;
-    id: number | string;
-}) => {
+export const QuizListItemEditableTitle = ({ title, id }: { title: string; id: string }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const { handleChange, toggleEditMode } = useEditableText(title);
@@ -51,18 +45,20 @@ export const QuizListItemEditableTitle = ({
     };
 
     return (
-        <InputBase
-            autoFocus
-            name={`${id}`}
-            defaultValue={title}
-            // error={text === ""}
-            onChange={(e) => {
-                handleOnChange(e);
-            }}
-            className={classes.textField}
-            onMouseEnter={() => toggleEditMode()}
-            onMouseLeave={() => toggleEditMode()}
-            fullWidth={true}
-        />
+        <div style={{ padding: "16px 20px 0" }}>
+            <InputBase
+                autoFocus
+                name={`${id}`}
+                defaultValue={title}
+                // error={text === ""}
+                onChange={(e) => {
+                    handleOnChange(e);
+                }}
+                className={classes.textField}
+                onMouseEnter={() => toggleEditMode()}
+                onMouseLeave={() => toggleEditMode()}
+                fullWidth={true}
+            />
+        </div>
     );
 };

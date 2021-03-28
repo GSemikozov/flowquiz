@@ -33,7 +33,6 @@ export const QuizItemEditableInput = ({
 }) => {
     const classes = useStyles();
     const { handleChange, toggleEditMode, editMode, text } = useEditableText(title);
-    console.log("editEdit", editMode);
 
     const debouncedSave = useRef(
         debounce((nextValue: string) => {

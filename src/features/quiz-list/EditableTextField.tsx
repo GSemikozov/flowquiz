@@ -57,14 +57,6 @@ export default function EditableTextField({
         // dispatch(updateTitleAction(dbValue))
     }, [dispatch, dbValue]);
 
-    useEffect(() => {
-        console.log("text was changed", text);
-    }, [text]);
-
-    useEffect(() => {
-        console.log("editMode inside", editMode);
-    }, [editMode]);
-
     const debouncedSave = useRef(
         debounce((nextValue: string) => {
             saveToDb(nextValue);

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 // import RadioGroup from "@material-ui/core/RadioGroup";
 import {
+    Button,
     Grid,
     // IconButton,
     List,
@@ -14,6 +15,8 @@ import {
 // import DeleteIcon from "@material-ui/icons/Delete";
 // import EditIcon from "@material-ui/icons/Edit";
 // import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import PlusIcon from "@material-ui/icons/Add";
+
 import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { addQuestionsListOption, getCurrentListItemOptionsSelector } from "./quizListSlice";
@@ -33,26 +36,30 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const QuizItemEditableOptions = ({ id }: { id: number }) => {
+export const QuizItemEditableOptions = ({ id }: { id: string }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const store = useStore();
-    const listItemData = useSelector(getCurrentListItemOptionsSelector(store.getState(), id));
+    const listItemData = useSelector(getCurrentListItemOptionsSelector(id));
     const [value] = useState("Option");
 
-    useEffect(() => {
-        console.log("listItemData", id, listItemData);
-        console.log("store.getState()", store.getState());
-    }, [id, listItemData, store]);
-
     const addMoreItem = useCallback(() => {
+        const isOpened = listItemData?.questions.find((question) => question.isOpen);
+        console.log("at least one opened", isOpened);
+
         const newOptionData = {
             quizListItemId: id,
-            quizListItemOption: { id: Date.now(), title: "Option", answer: "", isTrue: false },
+            quizListItemOption: {
+                id: Date.now(),
+                title: "Option",
+                answer: "",
+                isTrue: false,
+                isOpen: isOpened,
+            },
         };
 
         dispatch(addQuestionsListOption(newOptionData));
-    }, [dispatch, id]);
+    }, [dispatch, id, listItemData]);
 
     // const handleChange = (event: any) => {
     //     event.preventDefault();
@@ -64,27 +71,12 @@ export const QuizItemEditableOptions = ({ id }: { id: number }) => {
     // };
 
     useEffect(() => {
-        console.log("radio value changed", value);
-    }, [value]);
+        console.log("ID CHANGED in Options list");
+    }, [id]);
 
-    const DefaultItem = () => {
-        return (
-            <Grid
-                container
-                spacing={1}
-                style={{ marginBottom: "20px", marginTop: "8px" }}
-                alignItems="center"
-            >
-                <Grid item style={{ paddingLeft: "20px" }}>
-                    <TextField
-                        className={classes.formControl}
-                        placeholder="Add more option"
-                        onClick={addMoreItem}
-                    />
-                </Grid>
-            </Grid>
-        );
-    };
+    useEffect(() => {
+        console.log("listItemData ---------", listItemData);
+    }, [listItemData]);
 
     return (
         <List className={classes.list}>
@@ -99,7 +91,15 @@ export const QuizItemEditableOptions = ({ id }: { id: number }) => {
                         initialTitle={item.title}
                     />
                 ))}
-            <DefaultItem />
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={addMoreItem}
+                startIcon={<PlusIcon />}
+                style={{ margin: "40px 0 20px 24px" }}
+            >
+                Add more
+            </Button>
         </List>
     );
 };

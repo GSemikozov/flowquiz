@@ -288,11 +288,11 @@ const quizListSlice = createSlice({
                 });
         },
         closeTotallyAllAnswerFields(state) {
-            state.quizList.map((item) => {
+            state.quizList.map((item) =>
                 item.questions.map((question) => {
                     return (question.isOpen = false);
-                });
-            });
+                }),
+            );
         },
         setListItemActive(state, action) {
             const activeItem = state.quizList.find((item) => item.id === action.payload);

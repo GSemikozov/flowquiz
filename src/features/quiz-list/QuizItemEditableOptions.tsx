@@ -1,16 +1,14 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 // import RadioGroup from "@material-ui/core/RadioGroup";
 import {
     Button,
-    Grid,
     // IconButton,
     List,
     // ListItem,
     // ListItemIcon,
     // ListItemSecondaryAction,
     // ListItemText,
-    TextField,
     Typography,
 } from "@material-ui/core";
 // import DeleteIcon from "@material-ui/icons/Delete";
@@ -18,8 +16,8 @@ import {
 // import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import PlusIcon from "@material-ui/icons/Add";
 
-import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
-import { useDispatch, useSelector, useStore } from "react-redux";
+// import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
+import { useDispatch, useSelector } from "react-redux";
 import {
     addQuestionsListOption,
     closeTotallyAllAnswerFields,
@@ -45,9 +43,7 @@ const useStyles = makeStyles((theme) => ({
 export const QuizItemEditableOptions = ({ id }: { id: string }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const store = useStore();
     const listItemData = useSelector(getCurrentListItemOptionsSelector(id));
-    const [value] = useState("Option");
 
     const addMoreItem = useCallback(() => {
         const isOpened = listItemData?.questions.find((question) => question.isOpen);
@@ -79,7 +75,7 @@ export const QuizItemEditableOptions = ({ id }: { id: string }) => {
     useEffect(() => {
         console.log("ID CHANGED in Options list");
         dispatch(closeTotallyAllAnswerFields());
-    }, [id]);
+    }, [id, dispatch]);
 
     useEffect(() => {
         console.log("listItemData ---------", listItemData);

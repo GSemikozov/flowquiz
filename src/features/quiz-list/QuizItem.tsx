@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { quizListItemType } from "./types";
 import { makeStyles } from "@material-ui/core/styles";
-import { Card, CardContent, CardHeader, IconButton, TextareaAutosize } from "@material-ui/core";
-import ImageIcon from "@material-ui/icons/Image";
+import { Card, CardContent, TextareaAutosize } from "@material-ui/core";
+// import ImageIcon from "@material-ui/icons/Image";
 import { QuizListItemEditableTitle } from "./QuizListItemEditableTitle";
 import { QuizItemEditableOptions } from "./QuizItemEditableOptions";
-import { useDispatch, useSelector, useStore } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
     getCurrentListItemSelector,
     updateQuizListItemDescription,
@@ -69,7 +69,7 @@ export const QuizItem = ({
                 }),
             );
         },
-        [dispatch, id, description, setDescription],
+        [dispatch, id, setDescription2, description2],
     );
 
     useEffect(() => {

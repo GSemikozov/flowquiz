@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AppThunk, RootState } from "../../app/store";
+import { AppThunk } from "../../app/store";
 import { updateQuizListItemImg } from "../quiz-list/quizListSlice";
 
 type quizItemImageUrlType = string;

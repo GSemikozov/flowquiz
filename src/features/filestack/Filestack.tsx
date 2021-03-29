@@ -69,7 +69,7 @@ export const FilestackPicker = ({
                 enqueueSnackbar("Image was successfully loaded", { variant: "success" });
             }, 1000);
         },
-        [enqueueSnackbar, updateImage, handleClose, dispatch],
+        [enqueueSnackbar, updateImage, handleClose, listItemId, dispatch],
     );
 
     const { containerSelector } = useFilepicker({
@@ -115,7 +115,7 @@ export const FilestackPicker = ({
                     }}
                 />
             ),
-            [uploadedFile, currentImageUrl],
+            [],
         );
 
     // const MemoizedImg = React.memo(ThumbImg);

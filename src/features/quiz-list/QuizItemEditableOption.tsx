@@ -1,19 +1,16 @@
-import React, { Props, useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
     removeQuestionsListOption,
     updateQuestionsOptionAnswer,
     updateQuestionsListOptionTitle,
     // toggleQuestionsListOptionChecked,
     getCurrentListItemOptionsSelector,
-    getCurrentListItemOptionsStatusSelector,
+    // getCurrentListItemOptionsStatusSelector,
     getCurrentListItemOptionsOpenAnswerSelector,
     addQuestionsListOption,
-    openAllAnswerFields,
-    closeAllAnswerFields,
-    closeTotallyAllAnswerFields,
+    // closeTotallyAllAnswerFields,
     toggleQuestionsListOptionChecked,
     getCurrentListItemOptionsAnswerStatusSelector,
-    getCurrentListItemSelector,
 } from "./quizListSlice";
 import {
     Checkbox,
@@ -22,20 +19,18 @@ import {
     FormGroup,
     Grid,
     IconButton,
-    List,
     ListItem,
     ListItemIcon,
     ListItemSecondaryAction,
     ListItemText,
-    ListSubheader,
-    Switch,
+    // Switch,
     TextareaAutosize,
     Tooltip,
 } from "@material-ui/core";
 // import FormControlLabel from "@material-ui/core/FormControlLabel";
 // import Radio from "@material-ui/core/Radio";
 // import { CheckBox, Close, ExpandLess, ExpandMore } from "@material-ui/icons";
-import { useDispatch, useSelector, useStore } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import { QuizItemEditableInput } from "./QuizItemEditableInput";
 // import CheckCircleIcon from "@material-ui/icons/CheckCircle";
@@ -43,12 +38,7 @@ import { QuizItemEditableInput } from "./QuizItemEditableInput";
 import Cancel from "@material-ui/icons/Cancel";
 import CheckCircle from "@material-ui/icons/CheckCircle";
 import DeleteIcon from "@material-ui/icons/Delete";
-import QuestionAnswerIcon from "@material-ui/icons/QuestionAnswer";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
-import { QuestionAnswer } from "@material-ui/icons";
-import withStyles from "@material-ui/core/styles/withStyles";
-import { green, grey, purple } from "@material-ui/core/colors";
-import { useParams } from "react-router-dom";
 import { getUuid } from "../../helpers";
 
 const useStyles = makeStyles((theme) => ({
@@ -104,63 +94,63 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const useSwitchStyles = makeStyles((theme) => ({
-    root: {
-        width: 42,
-        height: 26,
-        padding: 0,
-        margin: theme.spacing(1),
-    },
-    switchBase: {
-        padding: 1,
-        "&$checked": {
-            transform: "translateX(16px)",
-            color: theme.palette.common.white,
-            "& + $track": {
-                backgroundColor: "#52d869",
-                opacity: 1,
-                border: "none",
-            },
-        },
-        "&$focusVisible $thumb": {
-            color: "#52d869",
-            border: "6px solid #fff",
-        },
-    },
-    thumb: {
-        width: 24,
-        height: 24,
-    },
-    track: {
-        borderRadius: 26 / 2,
-        border: `1px solid ${theme.palette.grey[400]}`,
-        backgroundColor: theme.palette.grey[50],
-        opacity: 1,
-        transition: theme.transitions.create(["background-color", "border"]),
-    },
-    checked: {},
-    focusVisible: {},
-}));
+// const useSwitchStyles = makeStyles((theme) => ({
+//     root: {
+//         width: 42,
+//         height: 26,
+//         padding: 0,
+//         margin: theme.spacing(1),
+//     },
+//     switchBase: {
+//         padding: 1,
+//         "&$checked": {
+//             transform: "translateX(16px)",
+//             color: theme.palette.common.white,
+//             "& + $track": {
+//                 backgroundColor: "#52d869",
+//                 opacity: 1,
+//                 border: "none",
+//             },
+//         },
+//         "&$focusVisible $thumb": {
+//             color: "#52d869",
+//             border: "6px solid #fff",
+//         },
+//     },
+//     thumb: {
+//         width: 24,
+//         height: 24,
+//     },
+//     track: {
+//         borderRadius: 26 / 2,
+//         border: `1px solid ${theme.palette.grey[400]}`,
+//         backgroundColor: theme.palette.grey[50],
+//         opacity: 1,
+//         transition: theme.transitions.create(["background-color", "border"]),
+//     },
+//     checked: {},
+//     focusVisible: {},
+// }));
 
 /* move for future */
-const IOSSwitch = ({ ...props }) => {
-    const classes = useSwitchStyles();
-
-    return (
-        <Switch
-            focusVisibleClassName={classes.focusVisible}
-            disableRipple
-            classes={{
-                root: classes.root,
-                switchBase: classes.switchBase,
-                thumb: classes.thumb,
-                track: classes.track,
-                checked: classes.checked,
-            }}
-            {...props}
-        />
-    );
-};
+// const IOSSwitch = ({ ...props }) => {
+//     const classes = useSwitchStyles();
+//
+//     return (
+//         <Switch
+//             focusVisibleClassName={classes.focusVisible}
+//             disableRipple
+//             classes={{
+//                 root: classes.root,
+//                 switchBase: classes.switchBase,
+//                 thumb: classes.thumb,
+//                 track: classes.track,
+//                 checked: classes.checked,
+//             }}
+//             {...props}
+//         />
+//     );
+// };
 
 export const ToggleCorrectAnswer = ({
     quizListItemId,
@@ -175,11 +165,11 @@ export const ToggleCorrectAnswer = ({
         getCurrentListItemOptionsAnswerStatusSelector(quizListItemId, questionId),
     );
 
-    const [checked, setChecked] = React.useState(isTrue);
+    // const [checked, setChecked] = React.useState(isTrue);
 
     const handleToggle = useCallback(() => {
         console.log("------------- go and dispatch");
-        setChecked((prev) => !prev);
+        // setChecked((prev) => !prev);
         dispatch(toggleQuestionsListOptionChecked({ quizListItemId, questionId }));
     }, [dispatch, quizListItemId, questionId]);
 
@@ -226,7 +216,7 @@ export const QuizItemEditableOption = ({
     const [dbValue, saveToDb] = useState(""); // would be an API call normally
     const [answer, setAnswer] = useState("");
     const [title, setTitle] = useState(initialTitle);
-    const [isOpened, setIsOpened] = useState(false);
+    // const [isOpened, setIsOpened] = useState(false);
 
     const handleAnswerChange = useCallback(
         (e: any) => {
@@ -265,7 +255,7 @@ export const QuizItemEditableOption = ({
                 }),
             );
         }
-    }, [dispatch, quizListId, questionId]);
+    }, [dispatch, quizListId, questionId, currentItemOptions]);
 
     const addMoreItem = useCallback(() => {
         const isOpened = currentItemOptions?.questions.find((question) => question.isOpen);
@@ -282,7 +272,7 @@ export const QuizItemEditableOption = ({
         };
 
         dispatch(addQuestionsListOption(newOptionData));
-    }, [dispatch, quizListId]);
+    }, [dispatch, quizListId, currentItemOptions]);
 
     const initialRender = useRef(true);
 
@@ -299,7 +289,7 @@ export const QuizItemEditableOption = ({
         const atLeastOneTrue =
             currentItemOptions?.questions.some((option) => option.isTrue) || false;
         console.log("atLeastOneTrue", atLeastOneTrue);
-    }, [currentItemOptions]);
+    }, [currentItemOptions?.questions]);
 
     // useEffect(() => {
     //     console.log("quizListId in Option ----------", quizListId);

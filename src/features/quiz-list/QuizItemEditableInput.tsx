@@ -32,7 +32,7 @@ export const QuizItemEditableInput = ({
     onPressBackspace: () => void;
 }) => {
     const classes = useStyles();
-    const { handleChange, toggleEditMode, editMode, text } = useEditableText(title);
+    const { handleChange, toggleEditMode, text } = useEditableText(title);
 
     const debouncedSave = useRef(
         debounce((nextValue: string) => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleQuizListItem, getCurrentListItemSelector } from "./quizListSlice";
 import { QuizItem } from "./QuizItem";
@@ -9,12 +9,6 @@ export const QuizItemList = () => {
     let { id } = useParams();
 
     const item = useSelector(getCurrentListItemSelector(id));
-
-    const [quizItem, setQuizItem] = useState({});
-
-    useEffect(() => {
-        item && setQuizItem(item);
-    }, [item]);
 
     return (
         <>

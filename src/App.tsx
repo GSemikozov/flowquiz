@@ -1,43 +1,33 @@
-import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 // import { FilestackPicker } from "./features/filestack/Filestack";
-import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 
 import "./App.css";
 
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import {
     Container,
     Divider,
     Drawer,
-    FormControl,
-    FormControlLabel,
-    FormGroup,
     IconButton,
     List,
     ListItem,
-    ListItemIcon,
     ListItemSecondaryAction,
     ListItemText,
     ListSubheader,
     Switch,
-    Tab,
-    Tabs,
-    Typography,
 } from "@material-ui/core";
 import { QuizItemList } from "./features/quiz-list/QuizItemsList";
-import { useDispatch, useSelector, useStore } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
     closeAllAnswerFields,
     getCurrentListItemSelector,
     getListSelector,
     openAllAnswerFields,
-    quizListPostAsync,
     toggleTitle,
     removeQuizListItemImg,
-    getCurrentListItemOptionsSelector,
 } from "./features/quiz-list/quizListSlice";
-import { Close, QuestionAnswer } from "@material-ui/icons";
+import { Close } from "@material-ui/icons";
 import MenuIcon from "@material-ui/icons/Menu";
 import { Link, useParams } from "react-router-dom";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -92,8 +82,8 @@ const useStyles = makeStyles((theme) => ({
 
 export const SwitchAnswers = () => {
     let { id } = useParams();
-    const currentItemOptions = useSelector(getCurrentListItemOptionsSelector(id));
-    const isOpened = !!currentItemOptions?.questions.find((question) => question.isOpen);
+    // const currentItemOptions = useSelector(getCurrentListItemOptionsSelector(id));
+    // const isOpened = !!currentItemOptions?.questions.find((question) => question.isOpen);
     const [checked, setChecked] = useState(false);
 
     const handleToggle = useCallback(() => {
@@ -109,14 +99,11 @@ export const SwitchAnswers = () => {
 
     useEffect(() => {
         checked ? dispatch(openAllAnswerFields(id)) : dispatch(closeAllAnswerFields(id));
-    }, [checked]);
+    }, [checked, id, dispatch]);
 
     return (
         <List subheader={<ListSubheader>Settings</ListSubheader>}>
             <ListItem>
-                {/*<ListItemIcon>*/}
-                {/*    <QuestionAnswer />*/}
-                {/*</ListItemIcon>*/}
                 <ListItemText id="switch-list-label" primary="Set answers" />
                 <ListItemSecondaryAction>
                     <Switch
@@ -132,10 +119,8 @@ export const SwitchAnswers = () => {
 };
 
 export const SwitchTitle = () => {
-    const classes = useStyles();
     const dispatch = useDispatch();
     let { id } = useParams();
-    const list = useSelector(getListSelector);
     const item = useSelector(getCurrentListItemSelector(id));
     const isTitleVisible = !!item?.title.isVisible;
 
@@ -154,9 +139,6 @@ export const SwitchTitle = () => {
     return (
         <List subheader={<ListSubheader>Switch title</ListSubheader>}>
             <ListItem>
-                {/*<ListItemIcon>*/}
-                {/*    <QuestionAnswer />*/}
-                {/*</ListItemIcon>*/}
                 <ListItemText id="switch-list-label" primary="Display title" />
                 <ListItemSecondaryAction>
                     <Switch
@@ -181,17 +163,11 @@ export const UploadImage = () => {
 
     const handleRemoveImage = useCallback(() => {
         dispatch(removeQuizListItemImg({ quizListItemId: id }));
-    }, []);
-
-    // useEffect(() => {
-    //     dispatch(toggleTitle(quizListItemId))
-    // }, [checked, dispatch])
+    }, [dispatch, id]);
 
     useEffect(() => {
         console.log("RENDERED ITSELF WITHOUT PROPS");
     }, []);
-
-    // TODO: переместить сайдбар как отдельный компонент как-то так, чтобы он был привязан к конкретной странице (сейчас не работает тогл тайтл как надо)
 
     return (
         <List subheader={<ListSubheader>Upload image</ListSubheader>}>
@@ -248,7 +224,6 @@ const DrawerContainer = ({ window, anchor, children }) => {
             <Drawer
                 container={container}
                 variant={!isDesktop ? "temporary" : "permanent"}
-                // anchor={theme.direction === 'rtl' ? 'right' : 'left'}
                 open={!isDesktop ? mobileOpen : true} //
                 anchor={anchor}
                 onClose={handleDrawerToggle}

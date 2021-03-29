@@ -8,7 +8,7 @@ import { Provider } from "react-redux";
 import * as serviceWorker from "./serviceWorker";
 import { initSentry } from "./services/sentry/sentry";
 import { SnackbarProvider } from "notistack";
-import { BrowserRouter, Link, Redirect, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { Navbar } from "./components/Navbar/Navbar";
 
 initSentry({

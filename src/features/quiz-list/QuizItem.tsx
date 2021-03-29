@@ -89,6 +89,8 @@ export const QuizItem = ({
                                     maxHeight: "300px",
                                     display: "block",
                                     margin: "16px auto",
+                                    borderRadius: "5px",
+                                    overflow: "hidden",
                                 }}
                                 alt="img"
                             />
@@ -100,7 +102,7 @@ export const QuizItem = ({
                                     width: "100%",
                                     padding: "10px",
                                     boxSizing: "border-box",
-                                    fontSize: "1rem",
+                                    fontSize: "16px",
                                     color: "initial",
                                     border: "none",
                                     outline: "none",
@@ -120,6 +122,7 @@ export const QuizItem = ({
                                     width: "100%",
                                     padding: "10px",
                                     boxSizing: "border-box",
+                                    fontSize: "16px",
                                     border: "none",
                                     outline: "none",
                                     resize: "none",

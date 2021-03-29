@@ -372,7 +372,7 @@ export const getCurrentListItemOptionsOpenAnswerSelector = (
             "quizQuestionId: ",
             quizQuestionId,
         );
-        return question ? question.isOpen : false;
+        return !!question?.isOpen;
     });
 
 export const getCurrentListItemOptionsAnswerStatusSelector = (

@@ -110,6 +110,8 @@ export const FilestackPicker = ({
                         maxHeight: "300px",
                         display: "block",
                         margin: "0 auto",
+                        borderRadius: "5px",
+                        overflow: "hidden",
                     }}
                 />
             ),

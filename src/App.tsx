@@ -35,6 +35,7 @@ import {
     quizListPostAsync,
     toggleTitle,
     removeQuizListItemImg,
+    getCurrentListItemOptionsSelector,
 } from "./features/quiz-list/quizListSlice";
 import { Close, QuestionAnswer } from "@material-ui/icons";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -91,6 +92,8 @@ const useStyles = makeStyles((theme) => ({
 
 export const SwitchAnswers = () => {
     let { id } = useParams();
+    const currentItemOptions = useSelector(getCurrentListItemOptionsSelector(id));
+    const isOpened = !!currentItemOptions?.questions.find((question) => question.isOpen);
     const [checked, setChecked] = useState(false);
 
     const handleToggle = useCallback(() => {
@@ -154,7 +157,7 @@ export const SwitchTitle = () => {
                 {/*<ListItemIcon>*/}
                 {/*    <QuestionAnswer />*/}
                 {/*</ListItemIcon>*/}
-                <ListItemText id="switch-list-label" primary="Switch title" />
+                <ListItemText id="switch-list-label" primary="Display title" />
                 <ListItemSecondaryAction>
                     <Switch
                         edge="end"

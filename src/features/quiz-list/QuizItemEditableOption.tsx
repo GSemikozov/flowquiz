@@ -49,6 +49,7 @@ import { QuestionAnswer } from "@material-ui/icons";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { green, grey, purple } from "@material-ui/core/colors";
 import { useParams } from "react-router-dom";
+import { getUuid } from "../../helpers";
 
 const useStyles = makeStyles((theme) => ({
     label: {
@@ -161,23 +162,6 @@ const IOSSwitch = ({ ...props }) => {
     );
 };
 
-const GreenSwitch = withStyles({
-    switchBase: {
-        color: grey[100],
-        "&$checked": {
-            color: green[500],
-        },
-        "&$checked + $track": {
-            backgroundColor: green[500],
-        },
-        "&$focusVisible $thumb": {
-            color: green[500],
-        },
-    },
-    checked: {},
-    track: {},
-})(Switch);
-
 export const ToggleCorrectAnswer = ({
     quizListItemId,
     questionId,
@@ -194,22 +178,14 @@ export const ToggleCorrectAnswer = ({
     const [checked, setChecked] = React.useState(isTrue);
 
     const handleToggle = useCallback(() => {
+        console.log("------------- go and dispatch");
         setChecked((prev) => !prev);
-    }, []);
+        dispatch(toggleQuestionsListOptionChecked({ quizListItemId, questionId }));
+    }, [dispatch, quizListItemId, questionId]);
 
-    useEffect(() => {
-        // checked ? (
-        //     dispatch(openAllAnswerFields(quizListItemId))
-        // ) : (
-        //     dispatch(closeAllAnswerFields(quizListItemId))
-        // )
-        console.log("go and dispatch");
-        // dispatch(toggleQuestionsListOptionChecked({quizListItemId, questionId}));
-    }, [checked, dispatch]);
-
-    useEffect(() => {
-        console.log("isTrue changed", isTrue);
-    }, [isTrue]);
+    // useEffect(() => {
+    //     console.log("------------- go and dispatch");
+    // }, [checked, dispatch]);
 
     return (
         <FormGroup>
@@ -219,7 +195,7 @@ export const ToggleCorrectAnswer = ({
                         icon={<Cancel color={isTrue ? "error" : "action"} />}
                         checkedIcon={<CheckCircle color="primary" />}
                         onChange={handleToggle}
-                        checked={checked}
+                        checked={isTrue}
                     />
                 }
                 label=""
@@ -240,7 +216,6 @@ export const QuizItemEditableOption = ({
     quizListId: string;
     questionId: string;
 }) => {
-    const isTrue = useSelector(getCurrentListItemOptionsStatusSelector(quizListId, questionId));
     const isAnswerOpen = useSelector(
         getCurrentListItemOptionsOpenAnswerSelector(quizListId, questionId),
     );
@@ -267,18 +242,6 @@ export const QuizItemEditableOption = ({
         [quizListId, questionId, setAnswer, dispatch],
     );
 
-    // const updateItemChecked = useCallback(
-    //     (questionId) => {
-    //         dispatch(
-    //             toggleQuestionsListOptionChecked({
-    //                 questionId: questionId,
-    //                 quizListItemId: quizListId,
-    //             }),
-    //         );
-    //     },
-    //     [dispatch, quizListId],
-    // );
-
     const updateItemTitle = useCallback(
         ({ title }: { title: string }) => {
             // dispatch(updateQuizListItemTitle({title: title, id: quizListId}));
@@ -292,17 +255,6 @@ export const QuizItemEditableOption = ({
         },
         [dispatch, quizListId, questionId],
     );
-
-    const updateItemAnswer = useCallback(() => {
-        console.log("UPDATE ANSWER");
-        dispatch(
-            updateQuestionsOptionAnswer({
-                answer: answer,
-                questionId: questionId,
-                quizListItemId: quizListId,
-            }),
-        );
-    }, [dispatch, questionId, quizListId, answer]);
 
     const removeItem = useCallback(() => {
         if (currentItemOptions && currentItemOptions.questions.length > 1) {
@@ -321,7 +273,7 @@ export const QuizItemEditableOption = ({
         const newOptionData = {
             quizListItemId: quizListId,
             quizListItemOption: {
-                id: Date.now(),
+                id: getUuid(),
                 title: "",
                 answer: "",
                 isTrue: false,
@@ -346,20 +298,18 @@ export const QuizItemEditableOption = ({
     useEffect(() => {
         const atLeastOneTrue =
             currentItemOptions?.questions.some((option) => option.isTrue) || false;
-        setIsOpened(atLeastOneTrue);
         console.log("atLeastOneTrue", atLeastOneTrue);
     }, [currentItemOptions]);
 
     // useEffect(() => {
-    //     console.log("isAnswerOpen ---------", isAnswerOpen, quizListId, questionId)
-    //     setIsOpened(isAnswerOpen);
-    // }, [isAnswerOpen]);
+    //     console.log("quizListId in Option ----------", quizListId);
+    //     // setIsOpened(false);
+    //     dispatch(closeTotallyAllAnswerFields());
+    // }, [quizListId, dispatch]);
 
     useEffect(() => {
-        console.log("quizListId in Option ----------", quizListId);
-        // setIsOpened(false);
-        dispatch(closeTotallyAllAnswerFields());
-    }, [quizListId, dispatch]);
+        console.log("-------- isAnswerOpen --------- ", isAnswerOpen);
+    }, [isAnswerOpen]);
 
     return (
         <>
@@ -390,7 +340,7 @@ export const QuizItemEditableOption = ({
                 </ListItemSecondaryAction>
             </ListItem>
             <Collapse in={isAnswerOpen} timeout="auto">
-                <Grid container spacing={1} style={{ margin: "0 24px", alignItems: "center" }}>
+                <Grid container spacing={1} style={{ margin: "0 20px", alignItems: "center" }}>
                     <Grid item style={{ padding: "8px 16px", boxSizing: "border-box" }}>
                         {/*{!isTrue ? <Cancel color="error" /> : <CheckCircle color="secondary" />}*/}
                         <ToggleCorrectAnswer quizListItemId={quizListId} questionId={questionId} />
@@ -414,7 +364,7 @@ export const QuizItemEditableOption = ({
                             }}
                             aria-label="minimum height"
                             rowsMin={1}
-                            placeholder={`Place your comment here`}
+                            placeholder={`Answer feedback goes here`}
                             value={answer}
                             onChange={(e) => handleAnswerChange(e)}
                         />

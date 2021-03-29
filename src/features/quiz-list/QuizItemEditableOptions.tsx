@@ -11,6 +11,7 @@ import {
     // ListItemSecondaryAction,
     // ListItemText,
     TextField,
+    Typography,
 } from "@material-ui/core";
 // import DeleteIcon from "@material-ui/icons/Delete";
 // import EditIcon from "@material-ui/icons/Edit";
@@ -19,9 +20,14 @@ import PlusIcon from "@material-ui/icons/Add";
 
 import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
 import { useDispatch, useSelector, useStore } from "react-redux";
-import { addQuestionsListOption, getCurrentListItemOptionsSelector } from "./quizListSlice";
+import {
+    addQuestionsListOption,
+    closeTotallyAllAnswerFields,
+    getCurrentListItemOptionsSelector,
+} from "./quizListSlice";
 import { QuizItemEditableOption } from "./QuizItemEditableOption";
 import { questionsItem } from "./types";
+import { getUuid } from "../../helpers";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -45,12 +51,12 @@ export const QuizItemEditableOptions = ({ id }: { id: string }) => {
 
     const addMoreItem = useCallback(() => {
         const isOpened = listItemData?.questions.find((question) => question.isOpen);
-        console.log("at least one opened", isOpened);
+        console.log("addMoreItem: at least one opened", isOpened);
 
         const newOptionData = {
             quizListItemId: id,
             quizListItemOption: {
-                id: Date.now(),
+                id: getUuid(),
                 title: "Option",
                 answer: "",
                 isTrue: false,
@@ -72,6 +78,7 @@ export const QuizItemEditableOptions = ({ id }: { id: string }) => {
 
     useEffect(() => {
         console.log("ID CHANGED in Options list");
+        dispatch(closeTotallyAllAnswerFields());
     }, [id]);
 
     useEffect(() => {
@@ -79,27 +86,32 @@ export const QuizItemEditableOptions = ({ id }: { id: string }) => {
     }, [listItemData]);
 
     return (
-        <List className={classes.list}>
-            {listItemData &&
-                listItemData.questions.length > 0 &&
-                listItemData?.questions.map((item: questionsItem) => (
-                    <QuizItemEditableOption
-                        key={item.id}
-                        quizListId={id}
-                        questionId={item.id}
-                        name={item.title}
-                        initialTitle={item.title}
-                    />
-                ))}
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={addMoreItem}
-                startIcon={<PlusIcon />}
-                style={{ margin: "40px 0 20px 24px" }}
-            >
-                Add more
-            </Button>
-        </List>
+        <>
+            <Typography style={{ margin: "10px 20px 0", color: "#697386" }}>
+                Select correct answer below
+            </Typography>
+            <List className={classes.list}>
+                {listItemData &&
+                    listItemData.questions.length > 0 &&
+                    listItemData?.questions.map((item: questionsItem) => (
+                        <QuizItemEditableOption
+                            key={item.id}
+                            quizListId={id}
+                            questionId={item.id}
+                            name={item.title}
+                            initialTitle={item.title}
+                        />
+                    ))}
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={addMoreItem}
+                    startIcon={<PlusIcon />}
+                    style={{ margin: "40px 0 20px 24px" }}
+                >
+                    Add more
+                </Button>
+            </List>
+        </>
     );
 };

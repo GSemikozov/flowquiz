@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 // import { FilestackPicker } from "./features/filestack/Filestack";
 import Grid from "@material-ui/core/Grid";
 
@@ -29,7 +29,7 @@ import {
 } from "./features/quiz-list/quizListSlice";
 import { Close } from "@material-ui/icons";
 import MenuIcon from "@material-ui/icons/Menu";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { FilestackPicker } from "./features/filestack/Filestack";
 import ImageIcon from "@material-ui/icons/Image";

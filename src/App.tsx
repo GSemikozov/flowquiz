@@ -33,6 +33,7 @@ import { Link, useParams } from "react-router-dom";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { FilestackPicker } from "./features/filestack/Filestack";
 import ImageIcon from "@material-ui/icons/Image";
+import { DndList } from "./features/quiz-list/DndList";
 
 const drawerWidth = 240;
 
@@ -93,7 +94,7 @@ export const SwitchAnswers = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        console.log("ID CHANGED IN SWITCH - SET to FALSE INITIALLY", id);
+        // console.log("ID CHANGED IN SWITCH - SET to FALSE INITIALLY", id);
         setChecked(false);
     }, [id]);
 
@@ -132,7 +133,7 @@ export const SwitchTitle = () => {
     }, [id, dispatch]);
 
     useEffect(() => {
-        console.log("ID CHANGED IN SWITCH TITLE - isTitleVisible", isTitleVisible);
+        // console.log("ID CHANGED IN SWITCH TITLE - isTitleVisible", isTitleVisible);
         setChecked(isTitleVisible);
     }, [isTitleVisible]);
 
@@ -166,7 +167,7 @@ export const UploadImage = () => {
     }, [dispatch, id]);
 
     useEffect(() => {
-        console.log("RENDERED ITSELF WITHOUT PROPS");
+        // console.log("RENDERED ITSELF WITHOUT PROPS");
     }, []);
 
     return (
@@ -263,13 +264,18 @@ const NavigationSidebar = ({ window }: { window: any }) => {
         );
     });
 
+    useEffect(() => {
+        // console.log("SIDEBAR STATE")
+    }, [list]);
+
     return (
         <DrawerContainer window={window} anchor="left">
-            <ul style={{ listStyleType: "none" }}>
-                {list.map((item) => (
-                    <ListItem key={item.id} item={item} />
-                ))}
-            </ul>
+            {/*<ul style={{ listStyleType: "none" }}>*/}
+            {/*    {list.map((item) => (*/}
+            {/*        <ListItem key={item.id} item={item} />*/}
+            {/*    ))}*/}
+            {/*</ul>*/}
+            <DndList initialItems={list} />
         </DrawerContainer>
     );
 };
@@ -279,7 +285,7 @@ const App = (props: any) => {
     const { window } = props;
 
     useEffect(() => {
-        console.log("App was RERENDERED");
+        // console.log("App was RERENDERED");
     }, []);
 
     return (

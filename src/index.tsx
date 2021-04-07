@@ -10,6 +10,7 @@ import { initSentry } from "./services/sentry/sentry";
 import { SnackbarProvider } from "notistack";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { Navbar } from "./components/Navbar/Navbar";
+import { CreatePage } from "./components/CreatePage";
 
 initSentry({
     dsn: "https://ddb501c2d40e4a55842b80dc677ec4fa@o508217.ingest.sentry.io/5600418",
@@ -23,6 +24,9 @@ ReactDOM.render(
                 <Switch>
                     <Route exact={true} path="/edit/:id">
                         <App />
+                    </Route>
+                    <Route exact={true} path="/create">
+                        <CreatePage />
                     </Route>
                     <Route exact={true} path="/">
                         <div style={{ marginTop: "100px", textAlign: "center" }}>Home</div>

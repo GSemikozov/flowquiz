@@ -213,8 +213,8 @@ export const QuizItemEditableOption = ({
 
     const dispatch = useDispatch();
     const classes = useStyles();
-    const [dbValue, saveToDb] = useState(""); // would be an API call normally
     const [answer, setAnswer] = useState("");
+    const [dbValue, saveToDb] = useState(""); // would be an API call normally
     const [title, setTitle] = useState(initialTitle);
     // const [isOpened, setIsOpened] = useState(false);
 
@@ -300,6 +300,11 @@ export const QuizItemEditableOption = ({
     useEffect(() => {
         console.log("-------- isAnswerOpen --------- ", isAnswerOpen);
     }, [isAnswerOpen]);
+
+    useEffect(() => {
+        saveToDb(initialTitle);
+        setTitle(initialTitle);
+    }, [initialTitle]);
 
     return (
         <>

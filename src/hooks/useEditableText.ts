@@ -41,6 +41,8 @@ export const useEditableText = (initValue: string) => {
         handleDoubleClick,
         toggleEditMode,
         text,
+        setText,
         editMode,
+        setEditMode,
     };
 };

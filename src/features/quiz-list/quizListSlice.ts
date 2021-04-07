@@ -45,6 +45,13 @@ const initialState = {
                     isOpen: false,
                     isTrue: false,
                 },
+                {
+                    id: "5abcd",
+                    title: "Option 2",
+                    answer: "",
+                    isOpen: false,
+                    isTrue: false,
+                },
             ],
         },
     ],
@@ -103,9 +110,10 @@ const quizListSlice = createSlice({
             state.quizList.push(getDummyListItem());
         },
         updateQuizListItem(state, action) {
-            const { id, title, completed, questions } = action.payload;
+            // const { id, title, completed, questions } = action.payload;
+            console.log("WILL PUSH UPDATED LIST", action.payload);
             // @ts-ignore
-            state.quizList.push({ id, title, completed, questions });
+            state.quizList = action.payload;
         },
         updateQuizListItemTitle(state, action) {
             const { title, quizListItemId } = action.payload;
@@ -235,6 +243,8 @@ const quizListSlice = createSlice({
             const { quizListItemId, questionId, title } = action.payload;
             const item = state.quizList.find((item) => item.id === quizListItemId);
             const question = item && getQuestion({ state, quizListItemId, questionId });
+
+            console.log("GONNA UPDATE option title", title);
 
             if (question) {
                 // @ts-ignore

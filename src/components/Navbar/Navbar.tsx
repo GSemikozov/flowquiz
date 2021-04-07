@@ -9,7 +9,7 @@ export const Navbar = () => {
 
     useEffect(() => {
         console.log("params", params);
-    }, []);
+    }, [params]);
     return (
         <AppBar color="default">
             <Toolbar style={{ justifyContent: "space-between" }}>

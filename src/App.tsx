@@ -256,13 +256,13 @@ const SettingsSidebar = ({ window }: { window: any }) => (
 const NavigationSidebar = ({ window }: { window: any }) => {
     const list = useSelector(getListSelector);
 
-    const ListItem = memo(({ item }: { item: any }) => {
-        return (
-            <li>
-                <Link to={`/edit/${item.id}`}>{item.title.text}</Link>
-            </li>
-        );
-    });
+    // const ListItem = memo(({ item }: { item: any }) => {
+    //     return (
+    //         <li>
+    //             <Link to={`/edit/${item.id}`}>{item.title.text}</Link>
+    //         </li>
+    //     );
+    // });
 
     useEffect(() => {
         // console.log("SIDEBAR STATE")

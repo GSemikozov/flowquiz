@@ -54,7 +54,7 @@ export const QuizListItemEditableTitle = ({
 
     const handleClickOutside = useCallback(() => {
         setEditMode(false);
-    }, []);
+    }, [setEditMode]);
 
     useEffect(() => {
         console.log("2. !!!", title);

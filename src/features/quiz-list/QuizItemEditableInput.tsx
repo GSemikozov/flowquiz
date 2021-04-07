@@ -52,7 +52,7 @@ export const QuizItemEditableInput = ({
 
     const handleClickOutside = useCallback(() => {
         setEditMode(false);
-    }, []);
+    }, [setEditMode]);
 
     // useEffect(() => {
     //     console.log("editMode rendered", editMode);
@@ -61,7 +61,7 @@ export const QuizItemEditableInput = ({
     useEffect(() => {
         setText(title);
         debouncedSave(title);
-    }, []);
+    }, [debouncedSave, setText, title]);
 
     return (
         <ClickAwayListener onClickAway={handleClickOutside}>

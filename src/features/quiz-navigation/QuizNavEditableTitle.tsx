@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     disabled: {
-        color: "grey",
+        color: "inherit !important",
     },
 }));
 
@@ -56,7 +56,7 @@ export const QuizNavEditableTitle = ({
                       }),
                   );
         },
-        [dispatch, id],
+        [dispatch, id, isChapter, questionId],
     );
 
     const debouncedSave = useRef(
@@ -73,7 +73,7 @@ export const QuizNavEditableTitle = ({
 
     const handleClickOutside = useCallback(() => {
         setEditMode(false);
-    }, []);
+    }, [setEditMode]);
 
     useEffect(() => {
         // console.log("1. !!!", title)

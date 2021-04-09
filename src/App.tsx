@@ -22,7 +22,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
     closeAllAnswerFields,
     getCurrentListItemSelector,
-    getListSelector,
     openAllAnswerFields,
     toggleTitle,
     removeQuizListItemImg,
@@ -254,28 +253,9 @@ const SettingsSidebar = ({ window }: { window: any }) => (
 );
 
 const NavigationSidebar = ({ window }: { window: any }) => {
-    const list = useSelector(getListSelector);
-
-    // const ListItem = memo(({ item }: { item: any }) => {
-    //     return (
-    //         <li>
-    //             <Link to={`/edit/${item.id}`}>{item.title.text}</Link>
-    //         </li>
-    //     );
-    // });
-
-    useEffect(() => {
-        // console.log("SIDEBAR STATE")
-    }, [list]);
-
     return (
         <DrawerContainer window={window} anchor="left">
-            {/*<ul style={{ listStyleType: "none" }}>*/}
-            {/*    {list.map((item) => (*/}
-            {/*        <ListItem key={item.id} item={item} />*/}
-            {/*    ))}*/}
-            {/*</ul>*/}
-            <DndList initialItems={list} />
+            <DndList />
         </DrawerContainer>
     );
 };

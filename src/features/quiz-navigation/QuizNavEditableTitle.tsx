@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     disabled: {
-        color: "inherit !important",
+        color: "black !important",
     },
 }));
 

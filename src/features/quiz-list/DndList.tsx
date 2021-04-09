@@ -16,8 +16,8 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 // import EditIcon from "@material-ui/icons/Edit";
 import { ExpandMore, Help, NavigateNext } from "@material-ui/icons";
 import { Link, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { updateQuizListItem } from "./quizListSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { getListSelector, updateQuizListItem } from "./quizListSlice";
 import { QuizNavEditableTitle } from "../quiz-navigation/QuizNavEditableTitle";
 
 // fake data generator
@@ -182,9 +182,9 @@ const ListItems = React.memo(({ list }: { list: any }) => {
 });
 
 // @ts-ignore
-export const DndList = ({ initialItems }) => {
-    // const list = useSelector(getListSelector);
-    const [state, setState] = useState({ list: initialItems });
+export const DndList = () => {
+    const list = useSelector(getListSelector);
+    const [state, setState] = useState({ list: list });
 
     const dispatch = useDispatch();
 
@@ -210,6 +210,7 @@ export const DndList = ({ initialItems }) => {
                 // @ts-ignore
                 list: items,
             });
+            updateStore();
         } else if (result.type === "droppableSubItem") {
             const itemSubItemMap = state.list.reduce((acc: any, item: any) => {
                 acc[item.id] = item.questions;
@@ -240,6 +241,7 @@ export const DndList = ({ initialItems }) => {
                 setState({
                     list: newItems,
                 });
+                updateStore();
             } else {
                 let newSourceSubItems = [...sourceSubItems];
                 const [draggedItem] = newSourceSubItems.splice(sourceIndex, 1);
@@ -263,19 +265,24 @@ export const DndList = ({ initialItems }) => {
                 setState({
                     list: newItems,
                 });
+                updateStore();
             }
         }
     };
 
-    useEffect(() => {
-        console.log("DNDList state updates", state.list);
+    const updateStore = useCallback(() => {
         dispatch(updateQuizListItem(state.list));
-    }, [state, dispatch]);
+    }, [dispatch, state]);
+
+    // useEffect(() => {
+    //     console.log("DNDList state updates", state.list);
+    //     dispatch(updateQuizListItem(state.list));
+    // }, [state, dispatch]);
 
     useEffect(() => {
-        console.log("DNDList initialItems", initialItems);
-        setState({ list: initialItems });
-    }, [initialItems]);
+        console.log("DNDList initialItems", list);
+        setState({ list: list });
+    }, [list]);
 
     // @ts-ignore
     return (

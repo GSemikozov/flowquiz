@@ -86,12 +86,14 @@ const SubItemsList = React.memo(({ subItems, id }: { subItems: any; id: any }) =
                             <Help color="action" fontSize="small" />
                         </ListItemIcon>
                         <ListItemText>
-                            <QuizNavEditableTitle
-                                title={item.title}
-                                id={id}
-                                questionId={item.id}
-                                isChapter={false}
-                            />
+                            <Link to={`/quiz/edit/${item.id}`} style={{ textDecoration: "none" }}>
+                                <QuizNavEditableTitle
+                                    title={item.title.text}
+                                    id={id}
+                                    quizListItemId={item.id}
+                                    isChapter={false}
+                                />
+                            </Link>
                         </ListItemText>
                     </ListItem>
                     {/*{provided.placeholder}*/}
@@ -128,7 +130,7 @@ function Item({ item, index }) {
     }, []);
 
     useEffect(() => {
-        console.log("1. !!!", id, item.id);
+        console.log("1. !!!", id, item);
     }, [item, id]);
 
     return (
@@ -156,11 +158,11 @@ function Item({ item, index }) {
                         </ListItemIcon>
                         <div style={{ display: "flex", alignItems: "center" }}>
                             <Link
-                                to={`/edit/${item.id}`}
+                                to={`/quiz/edit/${item.id}`}
                                 style={{ marginRight: "10px", textDecoration: "none" }}
                             >
                                 <QuizNavEditableTitle
-                                    title={item.title.text}
+                                    title={item.title}
                                     id={item.id}
                                     isChapter={true}
                                 />
@@ -170,7 +172,7 @@ function Item({ item, index }) {
                         {/*    */}
                         {/*</ListItemSecondaryAction>*/}
                     </ListItem>
-                    <SubItem open={open} id={item.id} subItems={item.questions} />
+                    <SubItem open={open} id={item.id} subItems={item.chapterQuestions} />
                 </div>
             )}
         </Draggable>
@@ -178,7 +180,9 @@ function Item({ item, index }) {
 }
 
 const ListItems = React.memo(({ list }: { list: any }) => {
-    return list.map((item: any, index: number) => <Item item={item} index={index} key={item.id} />);
+    return list.map((item: any, index: number) => {
+        return <Item item={item} index={index} key={item.id} />;
+    });
 });
 
 // @ts-ignore
@@ -213,7 +217,7 @@ export const DndList = () => {
             updateStore();
         } else if (result.type === "droppableSubItem") {
             const itemSubItemMap = state.list.reduce((acc: any, item: any) => {
-                acc[item.id] = item.questions;
+                acc[item.id] = item.chapterQuestions;
                 return acc;
             }, {});
 
@@ -233,7 +237,7 @@ export const DndList = () => {
                     if (item.id === sourceParentId) {
                         return {
                             ...item,
-                            questions: reorderedSubItems,
+                            chapterQuestions: reorderedSubItems,
                         };
                     }
                     return item;
@@ -252,12 +256,12 @@ export const DndList = () => {
                     if (item.id === sourceParentId) {
                         return {
                             ...item,
-                            questions: newSourceSubItems,
+                            chapterQuestions: newSourceSubItems,
                         };
                     } else if (item.id === destParentId) {
                         return {
                             ...item,
-                            questions: newDestSubItems,
+                            chapterQuestions: newDestSubItems,
                         };
                     }
                     return item;

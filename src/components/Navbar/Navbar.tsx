@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { AppBar, Toolbar, Typography, Button } from "@material-ui/core";
-import { Link, useParams, useHistory } from "react-router-dom";
+import { Link, useParams, useHistory, useRouteMatch } from "react-router-dom";
 import { ArrowBack, Visibility } from "@material-ui/icons";
 
 export const Navbar = () => {
     const params = useParams();
     let history = useHistory();
+    let { url } = useRouteMatch();
 
     useEffect(() => {
         console.log("params", params);
@@ -52,10 +53,10 @@ export const Navbar = () => {
                 )}
                 <nav>
                     <Link
-                        to="/create"
+                        to={`/quiz`} // `${url}/quiz`
                         style={{
                             textDecoration: "none",
-                            color: history.location.pathname === "/create" ? "#5469D4" : "inherit",
+                            color: history.location.pathname === "/quiz" ? "#5469D4" : "inherit",
                             marginLeft: "20px",
                         }}
                     >

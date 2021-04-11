@@ -3,10 +3,7 @@ import { useEditableText } from "../../hooks/useEditableText";
 import debounce from "lodash.debounce";
 import { ClickAwayListener, InputBase } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-    updateQuestionsListOptionTitle,
-    updateQuizListItemTitle,
-} from "../quiz-list/quizListSlice";
+import { updateQuizListItemTitle, updateQuizChapterTitle } from "../quiz-list/quizListSlice";
 import { useDispatch } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
@@ -32,12 +29,12 @@ const useStyles = makeStyles((theme) => ({
 export const QuizNavEditableTitle = ({
     title,
     id,
-    questionId,
+    quizListItemId,
     isChapter,
 }: {
     title: string;
     id: string;
-    questionId?: string;
+    quizListItemId?: string;
     isChapter?: boolean;
 }) => {
     const classes = useStyles();
@@ -47,16 +44,12 @@ export const QuizNavEditableTitle = ({
     const updateItemTitle = useCallback(
         (title: string) => {
             isChapter
-                ? dispatch(updateQuizListItemTitle({ title: title, quizListItemId: id }))
+                ? dispatch(updateQuizChapterTitle({ title: title, chapterId: id }))
                 : dispatch(
-                      updateQuestionsListOptionTitle({
-                          title: title,
-                          questionId: questionId,
-                          quizListItemId: id,
-                      }),
+                      updateQuizListItemTitle({ title: title, quizListItemId: quizListItemId }),
                   );
         },
-        [dispatch, id, isChapter, questionId],
+        [dispatch, id, isChapter, quizListItemId],
     );
 
     const debouncedSave = useRef(

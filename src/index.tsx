@@ -22,10 +22,10 @@ ReactDOM.render(
             <BrowserRouter>
                 <Navbar />
                 <Switch>
-                    <Route exact={true} path="/edit/:id">
+                    <Route exact={true} path="/quiz/edit/:id">
                         <App />
                     </Route>
-                    <Route exact={true} path="/create">
+                    <Route exact={true} path="/quiz">
                         <CreatePage />
                     </Route>
                     <Route exact={true} path="/">

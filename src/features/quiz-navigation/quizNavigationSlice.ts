@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 
 const initialState = {
-    activeTabId: 1,
+    navigationMenu: [],
 };
 
 const quizNavigationSlice = createSlice({
@@ -10,13 +10,13 @@ const quizNavigationSlice = createSlice({
     initialState: initialState,
     reducers: {
         setActiveTab(state, action) {
-            state.activeTabId = action.payload;
+            // state.chapterId = action.payload;
         },
     },
 });
 
 export const { setActiveTab } = quizNavigationSlice.actions;
 
-export const selectActiveTab = (state: RootState) => state.quizNavigation.activeTabId;
+// export const selectActiveTab = (state: RootState) => state.quizNavigation.chapterId;
 
 export default quizNavigationSlice.reducer;

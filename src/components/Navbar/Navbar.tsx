@@ -1,12 +1,17 @@
 import React, { useEffect } from "react";
 import { AppBar, Toolbar, Typography, Button } from "@material-ui/core";
-import { Link, useParams, useHistory, useRouteMatch } from "react-router-dom";
+import {
+    Link,
+    useParams,
+    useHistory,
+    // useRouteMatch
+} from "react-router-dom";
 import { ArrowBack, Visibility } from "@material-ui/icons";
 
 export const Navbar = () => {
     const params = useParams();
     let history = useHistory();
-    let { url } = useRouteMatch();
+    // let { url } = useRouteMatch();
 
     useEffect(() => {
         console.log("params", params);

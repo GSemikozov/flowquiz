@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
     toggleQuizListItem,
-    getCurrentListItemSelector,
-    getListItemByIdSelector,
-    getCurrentChapterSelector,
+    // getCurrentListItemSelector,
+    // getListItemByIdSelector,
+    // getCurrentChapterSelector,
     isChapterSelector,
     getItemSelector,
 } from "./quizListSlice";
@@ -55,7 +55,7 @@ export const QuizItemList = () => {
         console.log("QUESTION, ID OR CHAPTER CHANGED-----", id, question, chapter);
         question && setItem((prev) => question || prev);
         chapterItem && setChapterItem((prev) => chapterItem || prev);
-    }, [id, question, chapter]);
+    }, [id, question, chapter, chapterItem]);
 
     return (
         <>

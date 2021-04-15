@@ -265,7 +265,7 @@ const App = (props: any) => {
     const { window } = props;
 
     useEffect(() => {
-        // console.log("App was RERENDERED");
+        console.log("App was RERENDERED", SettingsSidebar);
     }, []);
 
     return (
@@ -276,14 +276,14 @@ const App = (props: any) => {
                         <Grid item xs={1} sm={2} md={3}>
                             <NavigationSidebar window={window} />
                         </Grid>
-                        <Grid item xs={10} sm={8} md={6}>
+                        <Grid item xs={11} sm={10} md={9}>
                             <div className={classes.content}>
                                 <QuizItemList />
                             </div>
                         </Grid>
-                        <Grid item xs={1} sm={2} md={3}>
-                            <SettingsSidebar window={window} />
-                        </Grid>
+                        {/*<Grid item xs={1} sm={2} md={3}>*/}
+                        {/*    <SettingsSidebar window={window} />*/}
+                        {/*</Grid>*/}
                     </Grid>
                 </Container>
             </main>

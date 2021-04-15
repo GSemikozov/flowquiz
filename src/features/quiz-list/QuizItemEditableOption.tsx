@@ -247,7 +247,7 @@ export const QuizItemEditableOption = ({
     );
 
     const removeItem = useCallback(() => {
-        if (currentItemOptions && currentItemOptions.questions.length > 1) {
+        if (currentItemOptions && currentItemOptions?.questions.length > 1) {
             dispatch(
                 removeQuestionsListOption({
                     quizListItemId: quizListId,
@@ -290,6 +290,10 @@ export const QuizItemEditableOption = ({
             currentItemOptions?.questions.some((option) => option.isTrue) || false;
         console.log("atLeastOneTrue", atLeastOneTrue);
     }, [currentItemOptions?.questions]);
+
+    useEffect(() => {
+        console.log("!!===== currentItemOptions", currentItemOptions);
+    }, [currentItemOptions]);
 
     // useEffect(() => {
     //     console.log("quizListId in Option ----------", quizListId);

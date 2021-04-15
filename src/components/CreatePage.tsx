@@ -11,15 +11,21 @@ export const CreatePage = () => {
     return (
         <div style={{ marginTop: "100px", textAlign: "center" }}>
             <Typography>Create</Typography>
-            {menu.map((item) => {
-                return item.chapterQuestions.map((chapterQuestion) => (
-                    <Link key={chapterQuestion.id} to={`${url}/edit/${chapterQuestion.id}`}>
-                        <Button variant="outlined">
-                            {chapterQuestion.title.text} - {`${url}/edit/${chapterQuestion.id}`}
-                        </Button>
-                    </Link>
-                ));
-            })}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr" }}>
+                {menu.map((item) => {
+                    return item.chapterQuestions.map((chapterQuestion) => (
+                        <Link
+                            key={chapterQuestion.id}
+                            to={`${url}/edit/${chapterQuestion.id}`}
+                            style={{ margin: "10px", height: "100px", display: "flex" }}
+                        >
+                            <Button variant="outlined" style={{ width: "100%" }}>
+                                Chapter: {item.title} - Question: {chapterQuestion.title.text}
+                            </Button>
+                        </Link>
+                    ));
+                })}
+            </div>
         </div>
     );
 };

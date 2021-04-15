@@ -2,11 +2,12 @@ import { createSelector, createSlice } from "@reduxjs/toolkit";
 import { AppThunk, RootState } from "../../app/store";
 import { quizListType } from "./types";
 import { getUuid } from "../../helpers";
+import { ChapterQuestionType } from "./QuizItemsList";
 
 const initialState = {
     quizList: [
         {
-            id: "0987654321",
+            id: "1234567890",
             title: "Chapter 1",
             chapterQuestions: [
                 {
@@ -57,6 +58,66 @@ const initialState = {
                         {
                             id: "5abcd",
                             title: "Option 2",
+                            answer: "",
+                            isOpen: false,
+                            isTrue: false,
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: "0987654321",
+            title: "Chapter 2",
+            chapterQuestions: [
+                {
+                    id: "5d23aae4-f7f9-4683-9db5-868435452781",
+                    title: {
+                        text: "Title 3",
+                        isVisible: true,
+                    },
+                    description: "",
+                    description2: "",
+                    imageUrl: "",
+                    isActive: false,
+                    completed: false,
+                    questions: [
+                        {
+                            id: "5dfgcba",
+                            title: "Option",
+                            answer: "",
+                            isOpen: false,
+                            isTrue: false,
+                        },
+                    ],
+                },
+                {
+                    id: "5d23aae4-f7f9-4683-9db5-868435452782",
+                    title: {
+                        text: "Title 4",
+                        isVisible: true,
+                    },
+                    description: "",
+                    description2: "",
+                    imageUrl: "",
+                    isActive: false,
+                    completed: false,
+                    questions: [
+                        {
+                            id: "5abcdfg",
+                            title: "Option 3",
+                            answer: "",
+                            isOpen: false,
+                            isTrue: false,
+                            options: [
+                                {
+                                    title: "",
+                                },
+                            ],
+                        },
+                        {
+                            id: "5abcdefgh",
+                            title: "Option 4",
                             answer: "",
                             isOpen: false,
                             isTrue: false,
@@ -410,8 +471,30 @@ export const getListSelector = (state: RootState) => {
     return res.quizList;
 };
 
+export const isChapterSelector = (id: string) =>
+    createSelector(getListSelector, (list) => list.find((chapter) => chapter.id === id));
+
 export const getCurrentChapterSelector = (chapterId: string) =>
-    createSelector(getListSelector, (list) => list.find((chapter) => chapter.id === chapterId));
+    createSelector(
+        getListSelector,
+        isChapterSelector(chapterId),
+        (list, isChapter) => isChapter && list.find((chapter) => chapter.id === chapterId),
+    );
+
+export const getItemSelector = (id: string) =>
+    createSelector(getListSelector, (list) => {
+        let x = undefined;
+        list.forEach((chapter) => {
+            const item = chapter?.chapterQuestions.find((item) => item.id === id);
+            if (!!item) {
+                x = item;
+            }
+        });
+        return x;
+    });
+
+// export const isChapterSelectedSelector = (id: string) =>
+//     createSelector(getListSelector, (list) => list.)
 
 export const getCurrentListItemSelector = (id: string) =>
     createSelector(getListSelector, (list) => {
@@ -419,10 +502,35 @@ export const getCurrentListItemSelector = (id: string) =>
         return chapter?.chapterQuestions.find((item) => item.id === id);
     });
 
+export const getListItemByIdSelector = (id: string) =>
+    createSelector(getListSelector, (list) => {
+        const chapter = list.find((chapter) => chapter.id === id);
+        if (chapter) {
+            return chapter;
+        } else {
+            let x = undefined;
+            list.forEach((chapter) => {
+                const item = chapter?.chapterQuestions.find((item) => item.id === id);
+                if (!!item) {
+                    x = item;
+                }
+            });
+            return x;
+        }
+    });
+
 export const getCurrentListItemOptionsSelector = (quizQuestionId: string) =>
     createSelector(getListSelector, (list) => {
-        const chapter = list.find((chapter) => chapter.id === quizChapterId);
-        return chapter?.chapterQuestions.find((item) => item.id === quizQuestionId);
+        let x = {} as ChapterQuestionType;
+        list.forEach((chapter) => {
+            const questions = chapter.chapterQuestions.find(
+                (question) => question.id === quizQuestionId,
+            );
+            if (questions) {
+                return (x = questions);
+            }
+        });
+        return x;
     });
 
 // export const getCurrentListItemOptionsStatusSelector = (

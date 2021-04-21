@@ -72,10 +72,10 @@ export const QuizItemEditableOptions = ({ id }: { id: string }) => {
     //     setValue(value);
     // };
 
-    useEffect(() => {
-        console.log("ID CHANGED in Options list");
-        dispatch(closeTotallyAllAnswerFields());
-    }, [id, dispatch]);
+    // useEffect(() => {
+    //     console.log("ID CHANGED in Options list");
+    //     dispatch(closeTotallyAllAnswerFields());
+    // }, [id, dispatch]);
 
     useEffect(() => {
         console.log("listItemData ---------", listItemData);
@@ -87,8 +87,7 @@ export const QuizItemEditableOptions = ({ id }: { id: string }) => {
                 Select correct answer below
             </Typography>
             <List className={classes.list}>
-                {listItemData &&
-                    listItemData.questions.length > 0 &&
+                {listItemData?.questions &&
                     listItemData?.questions.map((item: questionsItem) => (
                         <QuizItemEditableOption
                             key={item.id}

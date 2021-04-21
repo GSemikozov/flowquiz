@@ -53,9 +53,9 @@ export const QuizItemList = () => {
 
     useEffect(() => {
         console.log("QUESTION, ID OR CHAPTER CHANGED-----", id, question, chapter);
-        question && setItem((prev) => question || prev);
-        chapterItem && setChapterItem((prev) => chapterItem || prev);
-    }, [id, question, chapter, chapterItem]);
+        setItem(question || ({} as ChapterQuestionType));
+        setChapterItem(chapter || ({} as ChapterType));
+    }, [id, question, chapter]);
 
     return (
         <>
@@ -63,7 +63,6 @@ export const QuizItemList = () => {
                 <>Chapter page - {chapter.title}</>
             ) : (
                 <>
-                    Item page
                     {item && Object.keys(item).length > 0 && (
                         <QuizItem
                             key={item.id}

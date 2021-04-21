@@ -206,9 +206,9 @@ export const QuizItemEditableOption = ({
     quizListId: string;
     questionId: string;
 }) => {
-    const isAnswerOpen = useSelector(
-        getCurrentListItemOptionsOpenAnswerSelector(quizListId, questionId),
-    );
+    // const isAnswerOpen = useSelector(
+    //     getCurrentListItemOptionsOpenAnswerSelector(quizListId, questionId),
+    // );
     const currentItemOptions = useSelector(getCurrentListItemOptionsSelector(quizListId));
 
     const dispatch = useDispatch();
@@ -285,15 +285,15 @@ export const QuizItemEditableOption = ({
         }
     }, [dispatch, dbValue, updateItemTitle]);
 
-    useEffect(() => {
-        const atLeastOneTrue =
-            currentItemOptions?.questions.some((option) => option.isTrue) || false;
-        console.log("atLeastOneTrue", atLeastOneTrue);
-    }, [currentItemOptions?.questions]);
-
-    useEffect(() => {
-        console.log("!!===== currentItemOptions", currentItemOptions);
-    }, [currentItemOptions]);
+    // useEffect(() => {
+    //     const atLeastOneTrue =
+    //         currentItemOptions?.questions.some((option) => option.isTrue) || false;
+    //     console.log("atLeastOneTrue", atLeastOneTrue);
+    // }, [currentItemOptions?.questions]);
+    //
+    // useEffect(() => {
+    //     console.log("!!===== currentItemOptions", currentItemOptions);
+    // }, [currentItemOptions]);
 
     // useEffect(() => {
     //     console.log("quizListId in Option ----------", quizListId);
@@ -301,9 +301,9 @@ export const QuizItemEditableOption = ({
     //     dispatch(closeTotallyAllAnswerFields());
     // }, [quizListId, dispatch]);
 
-    useEffect(() => {
-        console.log("-------- isAnswerOpen --------- ", isAnswerOpen);
-    }, [isAnswerOpen]);
+    // useEffect(() => {
+    //     console.log("-------- isAnswerOpen --------- ", isAnswerOpen);
+    // }, [isAnswerOpen]);
 
     useEffect(() => {
         saveToDb(initialTitle);
@@ -338,7 +338,8 @@ export const QuizItemEditableOption = ({
                     </Tooltip>
                 </ListItemSecondaryAction>
             </ListItem>
-            <Collapse in={isAnswerOpen} timeout="auto">
+            <Collapse in={true} timeout="auto">
+                {/* isAnswerOpen used before */}
                 <Grid container spacing={1} style={{ margin: "0 20px", alignItems: "center" }}>
                     <Grid item style={{ padding: "8px 16px", boxSizing: "border-box" }}>
                         {/*{!isTrue ? <Cancel color="error" /> : <CheckCircle color="secondary" />}*/}

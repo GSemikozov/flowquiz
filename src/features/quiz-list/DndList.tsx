@@ -9,16 +9,29 @@ import {
     Collapse,
     makeStyles,
     ListItemIcon,
+    ListItemSecondaryAction,
+    Button,
 } from "@material-ui/core";
 // import RootRef from "@material-ui/core/RootRef";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 // import InboxIcon from "@material-ui/icons/Inbox";
 // import EditIcon from "@material-ui/icons/Edit";
-import { ExpandMore, Help, NavigateNext } from "@material-ui/icons";
-import { Link, useParams } from "react-router-dom";
+import { Add, ExpandMore, Help, NavigateNext } from "@material-ui/icons";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getListSelector, updateQuizListItem } from "./quizListSlice";
+import {
+    getListSelector,
+    updateQuizListItem,
+    addNewQuizListItem,
+    addNewChapterItem,
+    removeQuizListItem,
+    duplicateQuizListItem,
+    duplicateChapterItem,
+    removeChapterItem,
+} from "./quizListSlice";
 import { QuizNavEditableTitle } from "../quiz-navigation/QuizNavEditableTitle";
+import { DropdownMenu } from "./DropdowmMenu";
+import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 
 // fake data generator
 // const getItems = count =>
@@ -62,41 +75,83 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     nested: {
-        paddingLeft: theme.spacing(4),
+        paddingLeft: theme.spacing(6),
     },
 }));
 
-const SubItemsList = React.memo(({ subItems, id }: { subItems: any; id: any }) => {
+const SubItemsListItem = ({
+    id,
+    item,
+    provided,
+    snapshot,
+}: {
+    id: string;
+    item: any;
+    provided: any;
+    snapshot: any;
+}) => {
     const classes = useStyles();
+    const dispatch = useDispatch();
+    let history = useHistory();
+    const { id: paramId } = useParams();
 
-    // @ts-ignore
+    const handleRemoveItem = useCallback(() => {
+        console.log("paramId, item.id", paramId, item.id);
+        dispatch(removeChapterItem({ chapterItemId: item.id }));
+        if (paramId === item.id) {
+            console.log("paramId === item.id");
+            history.push("/");
+        }
+    }, [dispatch, item.id]);
+
+    const handleDuplicateItem = useCallback(() => {
+        dispatch(duplicateChapterItem({ chapterItemId: item.id }));
+    }, [dispatch, item.id]);
+
+    const handleEditItem = useCallback(() => {
+        console.log("handle edit");
+    }, []);
+
+    return (
+        <ListItem
+            button={true}
+            className={`${classes.listItem} ${classes.nested}`}
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
+        >
+            <ListItemIcon style={{ minWidth: "32px" }}>
+                <Help color="action" fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>
+                <Link to={`/quiz/edit/${item.id}`} style={{ textDecoration: "none" }}>
+                    <QuizNavEditableTitle
+                        title={item.title.text}
+                        id={id}
+                        quizListItemId={item.id}
+                        isChapter={false}
+                    />
+                </Link>
+            </ListItemText>
+            <ListItemSecondaryAction>
+                <DropdownMenu
+                    id={`more-actions-${item.id}`}
+                    handleDuplicateItem={handleDuplicateItem}
+                    handleRemoveItem={handleRemoveItem}
+                    handleEditItem={handleEditItem}
+                />
+            </ListItemSecondaryAction>
+        </ListItem>
+    );
+};
+
+const SubItemsList = React.memo(({ subItems, id }: { subItems: any; id: any }) => {
     return subItems.map((item: any, index: number) => (
         <Draggable key={item.id} draggableId={item.id} index={index}>
             {(provided, snapshot) => (
                 <List disablePadding style={getListStyle(snapshot.draggingOver)}>
-                    <ListItem
-                        button={true}
-                        className={`${classes.listItem} ${classes.nested}`}
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
-                    >
-                        <ListItemIcon style={{ minWidth: "32px" }}>
-                            <Help color="action" fontSize="small" />
-                        </ListItemIcon>
-                        <ListItemText>
-                            <Link to={`/quiz/edit/${item.id}`} style={{ textDecoration: "none" }}>
-                                <QuizNavEditableTitle
-                                    title={item.title.text}
-                                    id={id}
-                                    quizListItemId={item.id}
-                                    isChapter={false}
-                                />
-                            </Link>
-                        </ListItemText>
-                    </ListItem>
-                    {/*{provided.placeholder}*/}
+                    <SubItemsListItem id={id} item={item} provided={provided} snapshot={snapshot} />
                 </List>
             )}
         </Draggable>
@@ -125,13 +180,27 @@ function Item({ item, index }) {
     const classes = useStyles();
     const { id } = useParams();
 
+    const dispatch = useDispatch();
+
     const handleClick = useCallback(() => {
         setOpen((prev) => !prev);
     }, []);
 
-    useEffect(() => {
-        console.log("1. !!!", id, item);
-    }, [item, id]);
+    const handleAddNewPage = useCallback(() => {
+        dispatch(addNewChapterItem({ chapterId: item.id }));
+    }, [dispatch, item.id]);
+
+    const handleRemoveItem = useCallback(() => {
+        dispatch(removeQuizListItem(item.id));
+    }, [dispatch, item.id]);
+
+    const handleDuplicateItem = useCallback(() => {
+        dispatch(duplicateQuizListItem(item.id));
+    }, [dispatch, item.id]);
+
+    const handleEditItem = useCallback(() => {
+        console.log("handle edit");
+    }, []);
 
     return (
         <Draggable
@@ -168,9 +237,17 @@ function Item({ item, index }) {
                                 />
                             </Link>
                         </div>
-                        {/*<ListItemSecondaryAction>*/}
-                        {/*    */}
-                        {/*</ListItemSecondaryAction>*/}
+                        <ListItemSecondaryAction style={{ display: "flex" }}>
+                            <IconButton onClick={handleAddNewPage}>
+                                <Add />
+                            </IconButton>
+                            <DropdownMenu
+                                id={`more-actions-${item.id}`}
+                                handleDuplicateItem={handleDuplicateItem}
+                                handleRemoveItem={handleRemoveItem}
+                                handleEditItem={handleEditItem}
+                            />
+                        </ListItemSecondaryAction>
                     </ListItem>
                     <SubItem open={open} id={item.id} subItems={item.chapterQuestions} />
                 </div>
@@ -274,6 +351,10 @@ export const DndList = () => {
         }
     };
 
+    const handleAddNewChapter = useCallback(() => {
+        dispatch(addNewQuizListItem());
+    }, []);
+
     const updateStore = useCallback(() => {
         dispatch(updateQuizListItem(state.list));
     }, [dispatch, state]);
@@ -290,16 +371,27 @@ export const DndList = () => {
 
     // @ts-ignore
     return (
-        <DragDropContext onDragEnd={onDragEndComplex}>
-            <Droppable droppableId="list" type="droppableItem">
-                {(provided, snapshot) => (
-                    <List ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
-                        {/* @ts-ignore */}
-                        <ListItems list={state.list} />
-                        {provided.placeholder}
-                    </List>
-                )}
-            </Droppable>
-        </DragDropContext>
+        <>
+            <DragDropContext onDragEnd={onDragEndComplex}>
+                <Droppable droppableId="list" type="droppableItem">
+                    {(provided, snapshot) => (
+                        <List ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
+                            {/* @ts-ignore */}
+                            <ListItems list={state.list} />
+                            {provided.placeholder}
+                        </List>
+                    )}
+                </Droppable>
+            </DragDropContext>
+            <Button
+                variant="contained"
+                color="default"
+                startIcon={<Add />}
+                style={{ width: "200px", margin: "0 24px" }}
+                onClick={handleAddNewChapter}
+            >
+                add chapter
+            </Button>
+        </>
     );
 };

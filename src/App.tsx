@@ -34,7 +34,7 @@ import { FilestackPicker } from "./features/filestack/Filestack";
 import ImageIcon from "@material-ui/icons/Image";
 import { DndList } from "./features/quiz-list/DndList";
 
-const drawerWidth = 240;
+const drawerWidth = 320;
 
 const useStyles = makeStyles((theme) => ({
     label: {

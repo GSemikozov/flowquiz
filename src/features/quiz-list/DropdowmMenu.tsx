@@ -1,9 +1,7 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { IconButton, Menu, MenuItem } from "@material-ui/core";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import { useDispatch } from "react-redux";
-
-import { removeQuizListItem, duplicateQuizListItem } from "./quizListSlice";
 
 const ITEM_HEIGHT = 48;
 
@@ -20,8 +18,6 @@ export const DropdownMenu = ({
 }) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
-
-    const dispatch = useDispatch();
 
     const handleClick = (event: any) => {
         setAnchorEl(event.currentTarget);

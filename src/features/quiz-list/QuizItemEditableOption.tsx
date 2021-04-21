@@ -6,7 +6,7 @@ import {
     // toggleQuestionsListOptionChecked,
     getCurrentListItemOptionsSelector,
     // getCurrentListItemOptionsStatusSelector,
-    getCurrentListItemOptionsOpenAnswerSelector,
+    // getCurrentListItemOptionsOpenAnswerSelector,
     addQuestionsListOption,
     // closeTotallyAllAnswerFields,
     toggleQuestionsListOptionChecked,

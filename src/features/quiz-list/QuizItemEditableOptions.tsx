@@ -20,7 +20,7 @@ import PlusIcon from "@material-ui/icons/Add";
 import { useDispatch, useSelector } from "react-redux";
 import {
     addQuestionsListOption,
-    closeTotallyAllAnswerFields,
+    // closeTotallyAllAnswerFields,
     getCurrentListItemOptionsSelector,
 } from "./quizListSlice";
 import { QuizItemEditableOption } from "./QuizItemEditableOption";

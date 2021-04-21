@@ -31,7 +31,7 @@ import {
 } from "./quizListSlice";
 import { QuizNavEditableTitle } from "../quiz-navigation/QuizNavEditableTitle";
 import { DropdownMenu } from "./DropdowmMenu";
-import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+// import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 
 // fake data generator
 // const getItems = count =>
@@ -102,7 +102,7 @@ const SubItemsListItem = ({
             console.log("paramId === item.id");
             history.push("/");
         }
-    }, [dispatch, item.id]);
+    }, [dispatch, item.id, history, paramId]);
 
     const handleDuplicateItem = useCallback(() => {
         dispatch(duplicateChapterItem({ chapterItemId: item.id }));
@@ -353,7 +353,7 @@ export const DndList = () => {
 
     const handleAddNewChapter = useCallback(() => {
         dispatch(addNewQuizListItem());
-    }, []);
+    }, [dispatch]);
 
     const updateStore = useCallback(() => {
         dispatch(updateQuizListItem(state.list));

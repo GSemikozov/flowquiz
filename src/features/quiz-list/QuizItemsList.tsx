@@ -55,7 +55,7 @@ export const QuizItemList = () => {
         console.log("QUESTION, ID OR CHAPTER CHANGED-----", id, question, chapter, chapterItem);
         setItem(question || ({} as ChapterQuestionType));
         setChapterItem(chapter || ({} as ChapterType));
-    }, [id, question, chapter]);
+    }, [id, question, chapter, chapterItem]);
 
     return (
         <>

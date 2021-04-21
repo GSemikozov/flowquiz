@@ -1,7 +1,6 @@
 import React from "react";
 import { IconButton, Menu, MenuItem } from "@material-ui/core";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
-import { useDispatch } from "react-redux";
 
 const ITEM_HEIGHT = 48;
 

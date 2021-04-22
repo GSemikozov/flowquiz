@@ -45,17 +45,17 @@ export const QuizItemList = () => {
     const dispatch = useDispatch();
     let { id } = useParams();
 
-    const [chapterItem, setChapterItem] = useState({} as ChapterType);
+    // const [chapterItem, setChapterItem] = useState({} as ChapterType);
     const [item, setItem] = useState({} as ChapterQuestionType);
 
     const chapter = useSelector(isChapterSelector(id));
     const question = useSelector(getItemSelector(id));
 
     useEffect(() => {
-        console.log("QUESTION, ID OR CHAPTER CHANGED-----", id, question, chapter, chapterItem);
+        // console.log("QUESTION, ID OR CHAPTER CHANGED-----", id, question, chapter, chapterItem);
         setItem(question || ({} as ChapterQuestionType));
-        setChapterItem(chapter || ({} as ChapterType));
-    }, [id, question, chapter, chapterItem]);
+        // setChapterItem(chapter || ({} as ChapterType));
+    }, [id, question, chapter]);
 
     return (
         <>

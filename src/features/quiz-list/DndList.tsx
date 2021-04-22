@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, CSSProperties, useRef } from "react";
+import React, { useCallback, useEffect, useState, CSSProperties } from "react";
 import {
     List,
     ListItem,
@@ -17,7 +17,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 // import InboxIcon from "@material-ui/icons/Inbox";
 // import EditIcon from "@material-ui/icons/Edit";
 import { Add, ExpandMore, Help, NavigateNext } from "@material-ui/icons";
-import { Link, useHistory, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
     getListSelector,
@@ -59,6 +59,8 @@ const getItemStyle = (isDragging: any, draggableStyle: any) => ({
     ...(isDragging && {
         background: "rgb(235,235,235)",
     }),
+    pointerEvents: isDragging ? "none" : "auto", // TODO: handle in future if need
+    // padding: "10px",
 });
 
 const getListStyle = (isDraggingOver: any) =>
@@ -111,7 +113,8 @@ const SubItemsListItem = ({
 
     const handleEditItem = useCallback(() => {
         console.log("handle edit");
-    }, []);
+        setEditMode(true);
+    }, [setEditMode]);
 
     return (
         <ListItem
@@ -135,7 +138,7 @@ const SubItemsListItem = ({
                         quizListItemId={item.id}
                         isChapter={false}
                         handleChange={handleChange}
-                        handleRename={() => setEditMode(true)}
+                        handleRename={handleEditItem}
                         toggleEditMode={toggleEditMode}
                         editMode={editMode}
                         setEditMode={setEditMode}
@@ -172,7 +175,7 @@ function SubItem({ subItems, id, open }) {
         <Collapse in={open} timeout="auto">
             <Droppable droppableId={id} type={`droppableSubItem`}>
                 {(provided, snapshot) => (
-                    <div ref={provided.innerRef}>
+                    <div ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
                         <SubItemsList subItems={subItems} id={id} />
                         {provided.placeholder}
                     </div>
@@ -210,7 +213,7 @@ function Item({ item, index }) {
     const handleEditItem = useCallback(() => {
         console.log("handle edit");
         setEditMode(true);
-    }, []);
+    }, [setEditMode]);
 
     return (
         <Draggable
@@ -393,7 +396,11 @@ export const DndList = () => {
             <DragDropContext onDragEnd={onDragEndComplex}>
                 <Droppable droppableId="list" type="droppableItem">
                     {(provided, snapshot) => (
-                        <List ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
+                        <List
+                            disablePadding
+                            ref={provided.innerRef}
+                            style={getListStyle(snapshot.isDraggingOver)}
+                        >
                             {/* @ts-ignore */}
                             <ListItems list={state.list} />
                             {provided.placeholder}
@@ -405,7 +412,7 @@ export const DndList = () => {
                 variant="contained"
                 color="default"
                 startIcon={<Add />}
-                style={{ width: "200px", margin: "0 24px" }}
+                style={{ width: "200px", margin: "20px 24px" }}
                 onClick={handleAddNewChapter}
             >
                 add chapter

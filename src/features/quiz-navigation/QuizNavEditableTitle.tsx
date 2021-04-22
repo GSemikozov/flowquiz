@@ -1,18 +1,23 @@
 import React, { useCallback, useEffect, useRef } from "react";
-import { useEditableText } from "../../hooks/useEditableText";
+// import { useEditableText } from "../../hooks/useEditableText";
 import debounce from "lodash.debounce";
-import { ClickAwayListener, InputBase } from "@material-ui/core";
+import {
+    // ClickAwayListener,
+    InputBase,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { updateQuizListItemTitle, updateQuizChapterTitle } from "../quiz-list/quizListSlice";
 import { useDispatch } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
     textField: {
-        minWidth: 100,
+        minWidth: "calc(100% - 24px)",
+        width: "auto",
         maxWidth: "100%",
+        marginRight: "24px",
         color: "black",
         opacity: 1,
-        borderBottom: 0,
+        border: "1px solid transparent",
         boxSizing: "border-box",
         "&:before": {
             borderBottom: "0 !important",
@@ -20,9 +25,17 @@ const useStyles = makeStyles((theme) => ({
         "&[disabled]": {
             pointerEvents: "none",
         },
+        "&:focus": {
+            outline: "2px solid blue",
+        },
     },
     disabled: {
         color: "black !important",
+        pointerEvents: "none",
+    },
+    edit: {
+        background: "white",
+        border: "1px solid rgba(0, 0, 0, 0.08)",
     },
 }));
 
@@ -44,11 +57,12 @@ export const QuizNavEditableTitle = ({
     handleChange: (value: any) => void;
     handleRename: (value: boolean) => void;
     editMode: boolean;
-    setEditMode: (value: boolean) => void;
+    setEditMode: (value: (prev: any) => boolean) => void;
     toggleEditMode: () => void;
 }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
+    const inputRef = useRef();
     // const { handleChange, toggleEditMode, editMode, setEditMode } = useEditableText(title);
 
     const updateItemTitle = useCallback(
@@ -74,35 +88,44 @@ export const QuizNavEditableTitle = ({
         debouncedSave(nextValue);
     };
 
-    const handleClickOutside = useCallback(() => {
-        setEditMode(false);
-    }, [setEditMode]);
+    // const handleClickOutside = useCallback(() => {
+    //     setEditMode(false);
+    // }, [setEditMode]);
 
-    const changeEditMode = useCallback(() => {
-        handleRename(true);
-    }, []);
+    // const changeEditMode = useCallback(() => {
+    //     handleRename(true);
+    // }, []);
 
     useEffect(() => {
         // console.log("1. !!!", title)
         // setText(title);
         // debouncedSave(title);
-    }, [title]);
+        console.log("4. !! editMode changed, inside", editMode);
+        if (editMode) {
+            // @ts-ignore
+            inputRef.current.focus();
+        }
+    }, [title, editMode]);
 
     return (
-        <ClickAwayListener onClickAway={handleClickOutside}>
-            <InputBase
-                autoFocus
-                name={`${id}`}
-                value={title}
-                // error={text === ""}
-                onChange={(e) => {
-                    handleOnChange(e);
-                }}
-                className={`${classes.textField} ${!editMode && classes.disabled}`}
-                onDoubleClick={() => toggleEditMode()}
-                disabled={!editMode}
-                fullWidth={true}
-            />
-        </ClickAwayListener>
+        // <ClickAwayListener onClickAway={handleClickOutside}>
+        <InputBase
+            ref={inputRef}
+            autoFocus
+            name={`${id}`}
+            value={title}
+            // error={text === ""}
+            onChange={(e) => {
+                handleOnChange(e);
+            }}
+            className={`${classes.textField} ${!editMode && classes.disabled} ${
+                editMode && classes.edit
+            }`}
+            // onDoubleClick={() => setEditMode((prev) => !prev)}
+            onBlur={() => setEditMode((prev) => !prev)}
+            disabled={!editMode}
+            fullWidth={true}
+        />
+        // </ClickAwayListener>
     );
 };

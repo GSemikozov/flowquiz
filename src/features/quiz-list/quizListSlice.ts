@@ -124,12 +124,12 @@ const getDummyListItem = () => {
     const questionId = getUuid();
     return {
         id: chapterId,
-        title: "Untitled",
+        title: "Untitled chapter",
         chapterQuestions: [
             {
                 id: getUuid(),
                 title: {
-                    text: "Untitled",
+                    text: "Untitled chapter page",
                     isVisible: true,
                 },
                 description: "",
@@ -140,7 +140,7 @@ const getDummyListItem = () => {
                 questions: [
                     {
                         id: questionId,
-                        title: "Untitled",
+                        title: "Untitled option",
                         answer: "",
                         isOpen: false,
                         isTrue: false,
@@ -255,12 +255,27 @@ const quizListSlice = createSlice({
         },
         updateQuizListItemTitle(state, action) {
             const { title, quizListItemId } = action.payload;
-            const chapter = state.quizList.find((chapter) => chapter.id === quizChapterId);
-            const item = chapter?.chapterQuestions.find((item) => item.id === quizListItemId);
+            let chapterId: string | undefined = undefined;
 
-            if (item) {
-                // @ts-ignore
-                item.title.text = title;
+            state.quizList.forEach((chapter) => {
+                const filteredChapterQuestion = chapter.chapterQuestions.find(
+                    (chapterQuestion) => chapterQuestion.id === quizListItemId,
+                );
+                if (filteredChapterQuestion) {
+                    chapterId = chapter.id;
+                }
+            });
+
+            if (chapterId) {
+                const chapter = state.quizList.find((chapter) => chapter.id === chapterId);
+                const item = chapter?.chapterQuestions.find(
+                    (chapterQuestion) => chapterQuestion.id === quizListItemId,
+                );
+
+                if (item) {
+                    // @ts-ignore
+                    item.title.text = title;
+                }
             }
         },
         toggleTitle(state, action) {
@@ -275,42 +290,94 @@ const quizListSlice = createSlice({
         },
         updateQuizListItemDescription(state, action) {
             const { description, quizListItemId } = action.payload;
-            const chapter = state.quizList.find((chapter) => chapter.id === quizChapterId);
-            const item = chapter?.chapterQuestions.find((item) => item.id === quizListItemId);
+            let chapterId: string | undefined = undefined;
 
-            if (item) {
-                // @ts-ignore
-                item.description = description;
+            state.quizList.forEach((chapter) => {
+                const filteredChapterQuestion = chapter.chapterQuestions.find(
+                    (chapterQuestion) => chapterQuestion.id === quizListItemId,
+                );
+                if (filteredChapterQuestion) {
+                    chapterId = chapter.id;
+                }
+            });
+
+            if (chapterId) {
+                const chapter = state.quizList.find((chapter) => chapter.id === chapterId);
+                const item = chapter?.chapterQuestions.find((item) => item.id === quizListItemId);
+
+                if (item) {
+                    // @ts-ignore
+                    item.description = description;
+                }
             }
         },
         updateQuizListItemDescription2(state, action) {
             const { description2, quizListItemId } = action.payload;
-            const chapter = state.quizList.find((chapter) => chapter.id === quizChapterId);
-            const item = chapter?.chapterQuestions.find((item) => item.id === quizListItemId);
+            let chapterId: string | undefined = undefined;
 
-            if (item) {
-                // @ts-ignore
-                item.description2 = description2;
+            state.quizList.forEach((chapter) => {
+                const filteredChapterQuestion = chapter.chapterQuestions.find(
+                    (chapterQuestion) => chapterQuestion.id === quizListItemId,
+                );
+                if (filteredChapterQuestion) {
+                    chapterId = chapter.id;
+                }
+            });
+
+            if (chapterId) {
+                const chapter = state.quizList.find((chapter) => chapter.id === chapterId);
+                const item = chapter?.chapterQuestions.find((item) => item.id === quizListItemId);
+
+                if (item) {
+                    // @ts-ignore
+                    item.description2 = description2;
+                }
             }
         },
         updateQuizListItemImg(state, action) {
             const { imageUrl, quizListItemId } = action.payload;
-            const chapter = state.quizList.find((chapter) => chapter.id === quizChapterId);
-            const item = chapter?.chapterQuestions.find((item) => item.id === quizListItemId);
-            console.log("updateQuizListItem img", imageUrl, quizListItemId, item);
-            if (item) {
-                // @ts-ignore
-                item.imageUrl = imageUrl;
+            let chapterId: string | undefined = undefined;
+
+            state.quizList.forEach((chapter) => {
+                const filteredChapterQuestion = chapter.chapterQuestions.find(
+                    (chapterQuestion) => chapterQuestion.id === quizListItemId,
+                );
+                if (filteredChapterQuestion) {
+                    chapterId = chapter.id;
+                }
+            });
+
+            if (chapterId) {
+                const chapter = state.quizList.find((chapter) => chapter.id === chapterId);
+                const item = chapter?.chapterQuestions.find((item) => item.id === quizListItemId);
+
+                if (item) {
+                    // @ts-ignore
+                    item.imageUrl = imageUrl;
+                }
             }
         },
         removeQuizListItemImg(state, action) {
             const { quizListItemId } = action.payload;
-            const chapter = state.quizList.find((chapter) => chapter.id === quizChapterId);
-            const item = chapter?.chapterQuestions.find((item) => item.id === quizListItemId);
-            console.log("REMOVE img", quizListItemId, item);
-            if (item) {
-                // @ts-ignore
-                item.imageUrl = "";
+            let chapterId: string | undefined = undefined;
+
+            state.quizList.forEach((chapter) => {
+                const filteredChapterQuestion = chapter.chapterQuestions.find(
+                    (chapterQuestion) => chapterQuestion.id === quizListItemId,
+                );
+                if (filteredChapterQuestion) {
+                    chapterId = chapter.id;
+                }
+            });
+
+            if (chapterId) {
+                const chapter = state.quizList.find((chapter) => chapter.id === chapterId);
+                const item = chapter?.chapterQuestions.find((item) => item.id === quizListItemId);
+
+                if (item) {
+                    // @ts-ignore
+                    item.imageUrl = "";
+                }
             }
         },
         toggleQuizListItem(state, action) {
@@ -393,7 +460,6 @@ const quizListSlice = createSlice({
                     );
                 }
             }
-            console.log("chapterId", chapterId);
         },
         addNewOption(state, action) {
             const chapter = state.quizList.find((chapter) => chapter.id === quizChapterId);
@@ -404,45 +470,82 @@ const quizListSlice = createSlice({
             }
         },
         addQuestionsListOption(state, action) {
-            const chapter = state.quizList.find((chapter) => chapter.id === quizChapterId);
-            const item = chapter?.chapterQuestions.find(
-                (item) => item.id === action.payload.quizListItemId,
-            );
+            const { quizListItemId, quizListItemOption } = action.payload;
+            let chapterId: string | undefined = undefined;
 
-            if (item) {
-                // @ts-ignore
-                item.questions.push(action.payload.quizListItemOption);
+            state.quizList.forEach((chapter) => {
+                const filteredChapterQuestion = chapter.chapterQuestions.find(
+                    (chapterQuestion) => chapterQuestion.id === quizListItemId,
+                );
+                if (filteredChapterQuestion) {
+                    chapterId = chapter.id;
+                }
+            });
+
+            if (chapterId) {
+                const chapter = state.quizList.find((chapter) => chapter.id === chapterId);
+                const item = chapter?.chapterQuestions.find((item) => item.id === quizListItemId);
+
+                if (item) {
+                    // @ts-ignore
+                    item.questions.push(quizListItemOption);
+                }
             }
         },
         removeQuestionsListOption(state, action) {
-            const chapter = state.quizList.find((chapter) => chapter.id === quizChapterId);
-            const item = chapter?.chapterQuestions.find(
-                (item) => item.id === action.payload.quizListItemId,
-            );
+            const { quizListItemId, questionId } = action.payload;
+            let chapterId: string | undefined = undefined;
 
-            if (item) {
-                // @ts-ignore
-                item.questions = item.questions.filter(
-                    (question) => question.id !== action.payload.questionId,
+            state.quizList.forEach((chapter) => {
+                const filteredChapterQuestion = chapter.chapterQuestions.find(
+                    (chapterQuestion) => chapterQuestion.id === quizListItemId,
                 );
+                if (filteredChapterQuestion) {
+                    chapterId = chapter.id;
+                }
+            });
+
+            if (chapterId) {
+                const chapter = state.quizList.find((chapter) => chapter.id === chapterId);
+                const item = chapter?.chapterQuestions.find((item) => item.id === quizListItemId);
+
+                if (item) {
+                    // @ts-ignore
+                    item.questions = item.questions.filter(
+                        (question) => question.id !== questionId,
+                    );
+                }
             }
         },
         toggleQuestionsListOption(state, action) {
-            const chapter = state.quizList.find((chapter) => chapter.id === quizChapterId);
-            const item = chapter?.chapterQuestions.find(
-                (item) => item.id === action.payload.quizListItemId,
-            );
-            const question =
-                item &&
-                getQuestion({
-                    ...state,
-                    ...action.payload.quizListItemId,
-                    ...action.payload.questionId,
-                });
+            const { quizListItemId, questionId } = action.payload;
+            let chapterId: string | undefined = undefined;
 
-            if (question) {
-                // @ts-ignore
-                question.isTrue = !item.isTrue;
+            state.quizList.forEach((chapter) => {
+                const filteredChapterQuestion = chapter.chapterQuestions.find(
+                    (chapterQuestion) => chapterQuestion.id === quizListItemId,
+                );
+                if (filteredChapterQuestion) {
+                    chapterId = chapter.id;
+                }
+            });
+
+            if (chapterId) {
+                const chapter = state.quizList.find((chapter) => chapter.id === chapterId);
+                const item = chapter?.chapterQuestions.find((item) => item.id === quizListItemId);
+
+                const question =
+                    item &&
+                    getQuestion({
+                        ...state,
+                        ...quizListItemId,
+                        ...questionId,
+                    });
+
+                if (question) {
+                    // @ts-ignore
+                    question.isTrue = !item.isTrue;
+                }
             }
         },
         updateQuestionsListOption(state, action) {

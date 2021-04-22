@@ -10,6 +10,7 @@ import {
 } from "./quizListSlice";
 import { QuizItem } from "./QuizItem";
 import { useParams } from "react-router-dom";
+import { Typography } from "@material-ui/core";
 
 export type QuestionTitleType = {
     text: string;
@@ -63,7 +64,7 @@ export const QuizItemList = () => {
                 <>Chapter page - {chapter.title}</>
             ) : (
                 <>
-                    {item && Object.keys(item).length > 0 && (
+                    {item && Object.keys(item).length > 0 ? (
                         <QuizItem
                             key={item.id}
                             id={item.id}
@@ -72,6 +73,8 @@ export const QuizItemList = () => {
                             questions={item.questions}
                             onClick={() => dispatch(toggleQuizListItem(item.id))}
                         />
+                    ) : (
+                        <Typography>Your page in trash.</Typography>
                     )}
                 </>
             )}

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, CSSProperties } from "react";
+import React, { useCallback, useEffect, useState, CSSProperties, useRef } from "react";
 import {
     List,
     ListItem,
@@ -31,6 +31,7 @@ import {
 } from "./quizListSlice";
 import { QuizNavEditableTitle } from "../quiz-navigation/QuizNavEditableTitle";
 import { DropdownMenu } from "./DropdowmMenu";
+import { useEditableText } from "../../hooks/useEditableText";
 // import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 
 // fake data generator
@@ -77,6 +78,9 @@ const useStyles = makeStyles((theme) => ({
     nested: {
         paddingLeft: theme.spacing(6),
     },
+    active: {
+        backgroundColor: "rgba(0, 0, 0, 0.08)",
+    },
 }));
 
 const SubItemsListItem = ({
@@ -92,17 +96,14 @@ const SubItemsListItem = ({
 }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    let history = useHistory();
     const { id: paramId } = useParams();
+    const { handleChange, toggleEditMode, editMode, setEditMode } = useEditableText(
+        item.title.text,
+    );
 
     const handleRemoveItem = useCallback(() => {
-        console.log("paramId, item.id", paramId, item.id);
         dispatch(removeChapterItem({ chapterItemId: item.id }));
-        if (paramId === item.id) {
-            console.log("paramId === item.id");
-            history.push("/");
-        }
-    }, [dispatch, item.id, history, paramId]);
+    }, [dispatch, item.id]);
 
     const handleDuplicateItem = useCallback(() => {
         dispatch(duplicateChapterItem({ chapterItemId: item.id }));
@@ -115,7 +116,9 @@ const SubItemsListItem = ({
     return (
         <ListItem
             button={true}
-            className={`${classes.listItem} ${classes.nested}`}
+            className={`${classes.listItem} ${classes.nested} ${
+                paramId === item.id && classes.active
+            }`}
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
@@ -131,6 +134,11 @@ const SubItemsListItem = ({
                         id={id}
                         quizListItemId={item.id}
                         isChapter={false}
+                        handleChange={handleChange}
+                        handleRename={() => setEditMode(true)}
+                        toggleEditMode={toggleEditMode}
+                        editMode={editMode}
+                        setEditMode={setEditMode}
                     />
                 </Link>
             </ListItemText>
@@ -179,6 +187,7 @@ function Item({ item, index }) {
     const [open, setOpen] = React.useState(true);
     const classes = useStyles();
     const { id } = useParams();
+    const { handleChange, toggleEditMode, editMode, setEditMode } = useEditableText(item.title);
 
     const dispatch = useDispatch();
 
@@ -200,6 +209,7 @@ function Item({ item, index }) {
 
     const handleEditItem = useCallback(() => {
         console.log("handle edit");
+        setEditMode(true);
     }, []);
 
     return (
@@ -217,8 +227,7 @@ function Item({ item, index }) {
                 >
                     <ListItem
                         button={true}
-                        className={classes.listItem}
-                        style={{ background: id === item.id ? "#e3e7eb" : "#fff" }}
+                        className={`${classes.listItem}, ${id === item.id && classes.active}`}
                     >
                         <ListItemIcon style={{ minWidth: "32px" }}>
                             <IconButton onClick={handleClick}>
@@ -234,6 +243,11 @@ function Item({ item, index }) {
                                     title={item.title}
                                     id={item.id}
                                     isChapter={true}
+                                    handleChange={handleChange}
+                                    handleRename={() => setEditMode(true)}
+                                    toggleEditMode={toggleEditMode}
+                                    editMode={editMode}
+                                    setEditMode={setEditMode}
                                 />
                             </Link>
                         </div>
@@ -285,13 +299,13 @@ export const DndList = () => {
 
             const items = reorder(state.list, sourceIndex, destIndex);
 
-            // console.log("droppableItem reordered items", items)
+            console.log("droppableItem reordered items", items);
 
             setState({
                 // @ts-ignore
                 list: items,
             });
-            updateStore();
+            updateStore(items);
         } else if (result.type === "droppableSubItem") {
             const itemSubItemMap = state.list.reduce((acc: any, item: any) => {
                 acc[item.id] = item.chapterQuestions;
@@ -322,7 +336,7 @@ export const DndList = () => {
                 setState({
                     list: newItems,
                 });
-                updateStore();
+                updateStore(newItems);
             } else {
                 let newSourceSubItems = [...sourceSubItems];
                 const [draggedItem] = newSourceSubItems.splice(sourceIndex, 1);
@@ -346,7 +360,7 @@ export const DndList = () => {
                 setState({
                     list: newItems,
                 });
-                updateStore();
+                updateStore(newItems);
             }
         }
     };
@@ -355,9 +369,13 @@ export const DndList = () => {
         dispatch(addNewQuizListItem());
     }, [dispatch]);
 
-    const updateStore = useCallback(() => {
-        dispatch(updateQuizListItem(state.list));
-    }, [dispatch, state]);
+    const updateStore = useCallback(
+        (items: any) => {
+            console.log("will updateStore on this", state.list);
+            dispatch(updateQuizListItem(items));
+        },
+        [dispatch, state],
+    );
 
     // useEffect(() => {
     //     console.log("DNDList state updates", state.list);

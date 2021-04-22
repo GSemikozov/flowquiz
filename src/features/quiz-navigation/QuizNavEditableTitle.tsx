@@ -31,15 +31,25 @@ export const QuizNavEditableTitle = ({
     id,
     quizListItemId,
     isChapter,
+    handleChange,
+    handleRename,
+    editMode,
+    setEditMode,
+    toggleEditMode,
 }: {
     title: string;
     id: string;
     quizListItemId?: string;
     isChapter?: boolean;
+    handleChange: (value: any) => void;
+    handleRename: (value: boolean) => void;
+    editMode: boolean;
+    setEditMode: (value: boolean) => void;
+    toggleEditMode: () => void;
 }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const { handleChange, toggleEditMode, editMode, setEditMode } = useEditableText(title);
+    // const { handleChange, toggleEditMode, editMode, setEditMode } = useEditableText(title);
 
     const updateItemTitle = useCallback(
         (title: string) => {
@@ -67,6 +77,10 @@ export const QuizNavEditableTitle = ({
     const handleClickOutside = useCallback(() => {
         setEditMode(false);
     }, [setEditMode]);
+
+    const changeEditMode = useCallback(() => {
+        handleRename(true);
+    }, []);
 
     useEffect(() => {
         // console.log("1. !!!", title)

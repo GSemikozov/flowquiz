@@ -101,12 +101,12 @@ export const QuizNavEditableTitle = ({
         // setText(title);
         // debouncedSave(title);
         console.log("4. !! editMode changed, inside", editMode, inputRef.current);
-        if (editMode) {
-            // @ts-ignore
-            inputRef.current.focus();
-            // @ts-ignore
-            inputRef.current.setSelectionRange(0, inputRef.current.value.length);
-        }
+        // if (editMode) {
+        // @ts-ignore
+        inputRef.current.focus();
+        // @ts-ignore
+        inputRef.current.setSelectionRange(0, inputRef.current.value.length);
+        // }
     }, [editMode]);
 
     return (

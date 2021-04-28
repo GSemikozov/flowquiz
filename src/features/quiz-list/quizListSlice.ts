@@ -126,12 +126,13 @@ type DummyListItemType = {
 const getDummyListItem = (newItemId: DummyListItemType) => {
     const chapterId = newItemId || getUuid();
     const questionId = getUuid();
+    const chapterQuestionId = getUuid();
     return {
         id: chapterId,
         title: "Untitled section",
         chapterQuestions: [
             {
-                id: getUuid(),
+                id: chapterQuestionId,
                 title: {
                     text: "Untitled page",
                     isVisible: true,
@@ -214,7 +215,7 @@ const quizListSlice = createSlice({
             //     return { payload: { id: Date.now() } }
             // }
             // @ts-ignore
-            state.quizList.push(getDummyListItem(action.payload.newItemId));
+            state.quizList.push(getDummyListItem(action.payload));
         },
         updateQuizListItem(state, action) {
             // const { id, title, completed, questions } = action.payload;

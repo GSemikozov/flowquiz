@@ -54,17 +54,19 @@ const reorder = (list: any, startIndex: number, endIndex: number) => {
 
 const getItemStyle = (isDragging: any, draggableStyle: any) => ({
     userSelect: "none",
+    pointerEvents: isDragging ? "none" : "auto", // TODO: handle in future if need
     // styles we need to apply on draggables
+    // background: isDragging ? "lightgreen" : "grey",
     ...draggableStyle,
     ...(isDragging && {
         background: "rgb(235,235,235)",
     }),
-    pointerEvents: isDragging ? "none" : "auto", // TODO: handle in future if need
-    // padding: "10px",
 });
 
 const getListStyle = (isDraggingOver: any) =>
     ({
+        minHeight: "1px",
+        // background: isDraggingOver ? "lightblue" : "lightgrey",
         pointerEvents: isDraggingOver ? "none" : "auto", // TODO: handle in future if need
     } as CSSProperties);
 
@@ -117,43 +119,46 @@ const SubItemsListItem = ({
     }, [setEditMode]);
 
     return (
-        <ListItem
-            button={true}
-            className={`${classes.listItem} ${classes.nested} ${
-                paramId === item.id && classes.active
-            }`}
+        <div
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
         >
-            <ListItemIcon style={{ minWidth: "32px" }}>
-                <Help color="action" fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>
-                <Link to={`/quiz/edit/${item.id}`} style={{ textDecoration: "none" }}>
-                    <QuizNavEditableTitle
-                        title={item.title.text}
-                        id={id}
-                        quizListItemId={item.id}
-                        isChapter={false}
-                        handleChange={handleChange}
-                        handleRename={handleEditItem}
-                        toggleEditMode={toggleEditMode}
-                        editMode={editMode}
-                        setEditMode={setEditMode}
+            <ListItem
+                button={true}
+                className={`${classes.listItem} ${classes.nested} ${
+                    paramId === item.id && classes.active
+                }`}
+            >
+                <ListItemIcon style={{ minWidth: "32px" }}>
+                    <Help color="action" fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>
+                    <Link to={`/quiz/edit/${item.id}`} style={{ textDecoration: "none" }}>
+                        <QuizNavEditableTitle
+                            title={item.title.text}
+                            id={id}
+                            quizListItemId={item.id}
+                            isChapter={false}
+                            handleChange={handleChange}
+                            handleRename={handleEditItem}
+                            toggleEditMode={toggleEditMode}
+                            editMode={editMode}
+                            setEditMode={setEditMode}
+                        />
+                    </Link>
+                </ListItemText>
+                <ListItemSecondaryAction>
+                    <DropdownMenu
+                        id={`more-actions-${item.id}`}
+                        handleDuplicateItem={handleDuplicateItem}
+                        handleRemoveItem={handleRemoveItem}
+                        handleEditItem={handleEditItem}
                     />
-                </Link>
-            </ListItemText>
-            <ListItemSecondaryAction>
-                <DropdownMenu
-                    id={`more-actions-${item.id}`}
-                    handleDuplicateItem={handleDuplicateItem}
-                    handleRemoveItem={handleRemoveItem}
-                    handleEditItem={handleEditItem}
-                />
-            </ListItemSecondaryAction>
-        </ListItem>
+                </ListItemSecondaryAction>
+            </ListItem>
+        </div>
     );
 };
 
@@ -231,6 +236,7 @@ function Item({ item, index }) {
                     <ListItem
                         button={true}
                         className={`${classes.listItem}, ${id === item.id && classes.active}`}
+                        style={{ paddingTop: 0, paddingBottom: 0 }}
                     >
                         <ListItemIcon style={{ minWidth: "32px" }}>
                             <IconButton onClick={handleClick}>
@@ -415,7 +421,7 @@ export const DndList = () => {
                 style={{ width: "200px", margin: "20px 24px" }}
                 onClick={handleAddNewChapter}
             >
-                add chapter
+                add section
             </Button>
         </>
     );

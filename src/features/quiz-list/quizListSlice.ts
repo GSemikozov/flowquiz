@@ -124,12 +124,12 @@ const getDummyListItem = () => {
     const questionId = getUuid();
     return {
         id: chapterId,
-        title: "Untitled chapter",
+        title: "Untitled section",
         chapterQuestions: [
             {
                 id: getUuid(),
                 title: {
-                    text: "Untitled chapter page",
+                    text: "Untitled page",
                     isVisible: true,
                 },
                 description: "",
@@ -155,7 +155,7 @@ const getDummyChapterOption = () => {
     return {
         id: getUuid(),
         title: {
-            text: "Untitled",
+            text: "Untitled page",
             isVisible: true,
         },
         description: "",
@@ -166,7 +166,7 @@ const getDummyChapterOption = () => {
         questions: [
             {
                 id: getUuid(),
-                title: "Untitled",
+                title: "Untitled option",
                 answer: "",
                 isOpen: false,
                 isTrue: false,

@@ -17,7 +17,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 // import InboxIcon from "@material-ui/icons/Inbox";
 // import EditIcon from "@material-ui/icons/Edit";
 import { Add, ExpandMore, Help, NavigateNext } from "@material-ui/icons";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
     getListSelector,
@@ -32,6 +32,7 @@ import {
 import { QuizNavEditableTitle } from "../quiz-navigation/QuizNavEditableTitle";
 import { DropdownMenu } from "./DropdowmMenu";
 import { useEditableText } from "../../hooks/useEditableText";
+import { getUuid } from "../../helpers";
 // import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 
 // fake data generator
@@ -100,6 +101,7 @@ const SubItemsListItem = ({
 }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
+    const history = useHistory();
     const { id: paramId } = useParams();
     const { handleChange, toggleEditMode, editMode, setEditMode } = useEditableText(
         item.title.text,
@@ -110,8 +112,10 @@ const SubItemsListItem = ({
     }, [dispatch, item.id]);
 
     const handleDuplicateItem = useCallback(() => {
-        dispatch(duplicateChapterItem({ chapterItemId: item.id }));
-    }, [dispatch, item.id]);
+        const newItemId = getUuid();
+        dispatch(duplicateChapterItem({ chapterItemId: item.id, duplicatedChapterId: newItemId }));
+        history.push(`${newItemId}`);
+    }, [dispatch, history, item.id]);
 
     const handleEditItem = useCallback(() => {
         console.log("handle edit");
@@ -195,6 +199,7 @@ function Item({ item, index }) {
     const [open, setOpen] = React.useState(true);
     const classes = useStyles();
     const { id } = useParams();
+    const history = useHistory();
     const { handleChange, toggleEditMode, editMode, setEditMode } = useEditableText(item.title);
 
     const dispatch = useDispatch();
@@ -204,16 +209,20 @@ function Item({ item, index }) {
     }, []);
 
     const handleAddNewPage = useCallback(() => {
-        dispatch(addNewChapterItem({ chapterId: item.id }));
-    }, [dispatch, item.id]);
+        const newItemId = getUuid();
+        dispatch(addNewChapterItem({ chapterId: item.id, newItemId: newItemId }));
+        history.push(`${newItemId}`);
+    }, [dispatch, history, item.id]);
 
     const handleRemoveItem = useCallback(() => {
         dispatch(removeQuizListItem(item.id));
     }, [dispatch, item.id]);
 
     const handleDuplicateItem = useCallback(() => {
-        dispatch(duplicateQuizListItem(item.id));
-    }, [dispatch, item.id]);
+        const newItemId = getUuid();
+        dispatch(duplicateQuizListItem({ id: item.id, newItemId: newItemId }));
+        history.push(`${newItemId}`);
+    }, [dispatch, history, item.id]);
 
     const handleEditItem = useCallback(() => {
         console.log("handle edit");
@@ -291,6 +300,7 @@ export const DndList = () => {
     const [state, setState] = useState({ list: list });
 
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const onDragEndComplex = (result: any) => {
         // console.log("onDragEndComplex")
@@ -375,8 +385,10 @@ export const DndList = () => {
     };
 
     const handleAddNewChapter = useCallback(() => {
-        dispatch(addNewQuizListItem());
-    }, [dispatch]);
+        const newItemId = getUuid();
+        dispatch(addNewQuizListItem(newItemId));
+        history.push(`${newItemId}`);
+    }, [dispatch, history]);
 
     const updateStore = useCallback(
         (items: any) => {

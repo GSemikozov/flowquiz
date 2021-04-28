@@ -119,8 +119,12 @@ const initialState = {
     ],
 };
 
-const getDummyListItem = () => {
-    const chapterId = getUuid();
+type DummyListItemType = {
+    newItemId?: string;
+};
+
+const getDummyListItem = (newItemId: DummyListItemType) => {
+    const chapterId = newItemId || getUuid();
     const questionId = getUuid();
     return {
         id: chapterId,
@@ -151,9 +155,13 @@ const getDummyListItem = () => {
     };
 };
 
-const getDummyChapterOption = () => {
+type DummyChapterOptionProps = {
+    newItemId?: string;
+};
+
+const getDummyChapterOption = (newItemId: DummyChapterOptionProps) => {
     return {
-        id: getUuid(),
+        id: newItemId || getUuid(),
         title: {
             text: "Untitled page",
             isVisible: true,
@@ -197,7 +205,7 @@ const quizListSlice = createSlice({
     name: "quizList",
     initialState: initialState,
     reducers: {
-        addNewQuizListItem(state) {
+        addNewQuizListItem(state, action) {
             // reducer(state, action) {
             //     const { id } = action.payload
             // },
@@ -206,7 +214,7 @@ const quizListSlice = createSlice({
             //     return { payload: { id: Date.now() } }
             // }
             // @ts-ignore
-            state.quizList.push(getDummyListItem());
+            state.quizList.push(getDummyListItem(action.payload.newItemId));
         },
         updateQuizListItem(state, action) {
             // const { id, title, completed, questions } = action.payload;
@@ -215,7 +223,7 @@ const quizListSlice = createSlice({
             state.quizList = action.payload;
         },
         duplicateQuizListItem(state, action) {
-            const currentItem = state.quizList.find((item) => item.id === action.payload);
+            const currentItem = state.quizList.find((item) => item.id === action.payload.id);
             const chapterQuestions = currentItem?.chapterQuestions.map((chapterQuestion) => {
                 const questions = chapterQuestion?.questions.map((question) => {
                     return {
@@ -231,7 +239,7 @@ const quizListSlice = createSlice({
             });
             const duplicatedItem = {
                 ...currentItem,
-                id: getUuid(),
+                id: action.payload.newItemId,
                 chapterQuestions: chapterQuestions,
             };
             console.log("currentItem", currentItem);
@@ -398,7 +406,7 @@ const quizListSlice = createSlice({
 
             if (chapter) {
                 // @ts-ignore
-                chapter.chapterQuestions.push(getDummyChapterOption());
+                chapter.chapterQuestions.push(getDummyChapterOption(action.payload.newItemId));
             }
         },
         duplicateChapterItem(state, action) {
@@ -428,7 +436,7 @@ const quizListSlice = createSlice({
                 duplicatedChapterItem = {
                     // @ts-ignore
                     ...chapterItem,
-                    id: getUuid(),
+                    id: action.payload.duplicatedChapterId,
                     questions: chapterItemQuestions,
                 };
             }

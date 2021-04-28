@@ -62,7 +62,7 @@ export const QuizNavEditableTitle = ({
 }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const inputRef = useRef();
+    const inputRef = useRef(null);
     // const { handleChange, toggleEditMode, editMode, setEditMode } = useEditableText(title);
 
     const updateItemTitle = useCallback(
@@ -100,18 +100,20 @@ export const QuizNavEditableTitle = ({
         // console.log("1. !!!", title)
         // setText(title);
         // debouncedSave(title);
-        console.log("4. !! editMode changed, inside", editMode);
+        console.log("4. !! editMode changed, inside", editMode, inputRef.current);
         if (editMode) {
             // @ts-ignore
             inputRef.current.focus();
+            // @ts-ignore
+            inputRef.current.setSelectionRange(0, inputRef.current.value.length);
         }
-    }, [title, editMode]);
+    }, [editMode]);
 
     return (
         // <ClickAwayListener onClickAway={handleClickOutside}>
         <InputBase
-            ref={inputRef}
-            autoFocus
+            inputRef={inputRef}
+            autoFocus={true}
             name={`${id}`}
             value={title}
             // error={text === ""}
@@ -122,7 +124,9 @@ export const QuizNavEditableTitle = ({
                 editMode && classes.edit
             }`}
             // onDoubleClick={() => setEditMode((prev) => !prev)}
-            onBlur={() => setEditMode((prev) => !prev)}
+            onBlur={() => {
+                setEditMode((prev) => !prev);
+            }}
             disabled={!editMode}
             fullWidth={true}
         />

@@ -44,9 +44,30 @@ export const DropdownMenu = ({
                     },
                 }}
             >
-                <MenuItem onClick={handleEditItem}>Rename</MenuItem>
-                <MenuItem onClick={handleDuplicateItem}>Duplicate</MenuItem>
-                <MenuItem onClick={handleRemoveItem}>Remove</MenuItem>
+                <MenuItem
+                    onClick={(e) => {
+                        handleEditItem();
+                        handleClose();
+                    }}
+                >
+                    Rename
+                </MenuItem>
+                <MenuItem
+                    onClick={(e) => {
+                        handleDuplicateItem();
+                        handleClose();
+                    }}
+                >
+                    Duplicate
+                </MenuItem>
+                <MenuItem
+                    onClick={(e) => {
+                        handleRemoveItem();
+                        handleClose();
+                    }}
+                >
+                    Remove
+                </MenuItem>
             </Menu>
         </div>
     );
